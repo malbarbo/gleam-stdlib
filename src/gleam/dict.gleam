@@ -31,9 +31,13 @@ pub type Dict(key, value)
 /// // -> 1
 /// ```
 ///
+pub fn size(dict: Dict(k, v)) -> Int {
+  do_size(dict)
+}
+
 @external(erlang, "maps", "size")
 @external(javascript, "../gleam_stdlib.mjs", "map_size")
-pub fn size(dict: Dict(k, v)) -> Int
+fn do_size(dict: Dict(k, v)) -> Int
 
 /// Determines whether or not the dict is empty.
 ///
@@ -75,9 +79,13 @@ pub fn is_empty(dict: Dict(k, v)) -> Bool {
 /// // -> [#("a", 0), #("b", 1), #("c", 2)]
 /// ```
 ///
+pub fn to_list(dict: Dict(key, value)) -> List(#(key, value)) {
+  do_to_list(dict)
+}
+
 @external(erlang, "maps", "to_list")
 @external(javascript, "../gleam_stdlib.mjs", "map_to_list")
-pub fn to_list(dict: Dict(key, value)) -> List(#(key, value))
+fn do_to_list(dict: Dict(key, value)) -> List(#(key, value))
 
 /// Converts a list of 2-element tuples `#(key, value)` to a dict.
 ///

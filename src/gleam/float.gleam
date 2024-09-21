@@ -424,9 +424,13 @@ fn do_product(numbers: List(Float), initial: Float) -> Float {
 /// // -> 0.646355926896028
 /// ```
 ///
+pub fn random() -> Float {
+  do_random()
+}
+
 @external(erlang, "rand", "uniform")
 @external(javascript, "../gleam_stdlib.mjs", "random_uniform")
-pub fn random() -> Float
+fn do_random() -> Float
 
 /// Computes the modulo of an float division of inputs as a `Result`.
 ///

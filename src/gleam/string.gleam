@@ -249,9 +249,13 @@ fn do_slice(string: String, idx: Int, len: Int) -> String {
 /// // -> "Lone Gunmen"
 /// ```
 ///
+pub fn crop(from string: String, before substring: String) -> String {
+  do_crop(string, substring)
+}
+
 @external(erlang, "gleam_stdlib", "crop_string")
 @external(javascript, "../gleam_stdlib.mjs", "crop_string")
-pub fn crop(from string: String, before substring: String) -> String
+fn do_crop(from string: String, before substring: String) -> String
 
 /// Drops *n* graphemes from the left side of a `String`.
 ///
@@ -304,9 +308,13 @@ pub fn drop_right(from string: String, up_to num_graphemes: Int) -> String {
 /// // -> False
 /// ```
 ///
+pub fn contains(does haystack: String, contain needle: String) -> Bool {
+  do_contains(haystack, needle)
+}
+
 @external(erlang, "gleam_stdlib", "contains_string")
 @external(javascript, "../gleam_stdlib.mjs", "contains_string")
-pub fn contains(does haystack: String, contain needle: String) -> Bool
+fn do_contains(does haystack: String, contain needle: String) -> Bool
 
 /// Checks whether the first `String` starts with the second one.
 ///
@@ -642,18 +650,12 @@ fn do_pop_grapheme(string string: String) -> Result(#(String, String), Nil)
 /// // -> ["a", "b", "c"]
 /// ```
 ///
-@external(javascript, "../gleam_stdlib.mjs", "graphemes")
 pub fn to_graphemes(string: String) -> List(String) {
-  do_to_graphemes(string, [])
-  |> list.reverse
+  do_to_graphemes(string)
 }
 
-fn do_to_graphemes(string: String, acc: List(String)) -> List(String) {
-  case pop_grapheme(string) {
-    Ok(#(grapheme, rest)) -> do_to_graphemes(rest, [grapheme, ..acc])
-    _ -> acc
-  }
-}
+@external(javascript, "../gleam_stdlib.mjs", "graphemes")
+fn do_to_graphemes(string: String) -> List(String)
 
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "codepoint")
@@ -734,9 +736,12 @@ fn string_to_codepoint_integer_list(a: String) -> List(Int)
 /// // -> "abc"
 /// ```
 ///
+pub fn from_utf_codepoints(utf_codepoints: List(UtfCodepoint)) -> String {
+  do_from_utf_codepoints(utf_codepoints)
+}
 @external(erlang, "gleam_stdlib", "utf_codepoint_list_to_string")
 @external(javascript, "../gleam_stdlib.mjs", "utf_codepoint_list_to_string")
-pub fn from_utf_codepoints(utf_codepoints: List(UtfCodepoint)) -> String
+fn do_from_utf_codepoints(utf_codepoints: List(UtfCodepoint)) -> String
 
 /// Converts an integer to a `UtfCodepoint`.
 ///
@@ -878,6 +883,10 @@ fn do_inspect(term term: anything) -> StringBuilder
 /// // -> 58
 /// ```
 ///
+pub fn byte_size(string: String) -> Int {
+  do_byte_size(string)
+}
+
 @external(erlang, "erlang", "byte_size")
 @external(javascript, "../gleam_stdlib.mjs", "byte_size")
-pub fn byte_size(string: String) -> Int
+fn do_byte_size(string: String) -> Int

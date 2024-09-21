@@ -26,9 +26,13 @@ pub type Decoder(t) =
 
 /// Converts any Gleam data into `Dynamic` data.
 ///
+pub fn from(a: anything) -> Dynamic {
+  do_from(a)
+}
+
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
-pub fn from(a: anything) -> Dynamic
+fn do_from(a: anything) -> Dynamic
 
 /// Decodes a `Dynamic` value from a `Dynamic` value.
 ///

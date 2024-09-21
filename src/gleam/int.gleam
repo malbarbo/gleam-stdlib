@@ -822,9 +822,13 @@ pub fn subtract(a: Int, b: Int) -> Int {
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
 /// is equivalent to bitwise operations on big-ints.
 ///
+pub fn bitwise_and(x: Int, y: Int) -> Int {
+  do_bitwise_and(x, y)
+}
+
 @external(erlang, "erlang", "band")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_and")
-pub fn bitwise_and(x: Int, y: Int) -> Int
+fn do_bitwise_and(x: Int, y: Int) -> Int
 
 /// Calculates the bitwise NOT of its argument.
 ///
@@ -832,9 +836,13 @@ pub fn bitwise_and(x: Int, y: Int) -> Int
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
 /// is equivalent to bitwise operations on big-ints.
 ///
+pub fn bitwise_not(x: Int) -> Int {
+  do_bitwise_not(x)
+}
+
 @external(erlang, "erlang", "bnot")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_not")
-pub fn bitwise_not(x: Int) -> Int
+fn do_bitwise_not(x: Int) -> Int
 
 /// Calculates the bitwise OR of its arguments.
 ///
@@ -842,9 +850,13 @@ pub fn bitwise_not(x: Int) -> Int
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
 /// is equivalent to bitwise operations on big-ints.
 ///
+pub fn bitwise_or(x: Int, y: Int) -> Int {
+  do_bitwise_or(x, y)
+}
+
 @external(erlang, "erlang", "bor")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_or")
-pub fn bitwise_or(x: Int, y: Int) -> Int
+fn do_bitwise_or(x: Int, y: Int) -> Int
 
 /// Calculates the bitwise XOR of its arguments.
 ///
@@ -852,9 +864,13 @@ pub fn bitwise_or(x: Int, y: Int) -> Int
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
 /// is equivalent to bitwise operations on big-ints.
 ///
+pub fn bitwise_exclusive_or(x: Int, y: Int) -> Int {
+  do_bitwise_exclusive_or(x, y)
+}
+
 @external(erlang, "erlang", "bxor")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_exclusive_or")
-pub fn bitwise_exclusive_or(x: Int, y: Int) -> Int
+fn do_bitwise_exclusive_or(x: Int, y: Int) -> Int
 
 /// Calculates the result of an arithmetic left bitshift.
 ///
@@ -862,9 +878,13 @@ pub fn bitwise_exclusive_or(x: Int, y: Int) -> Int
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
 /// is equivalent to bitwise operations on big-ints.
 ///
+pub fn bitwise_shift_left(x: Int, y: Int) -> Int {
+  do_bitwise_shift_left(x, y)
+}
+
 @external(erlang, "erlang", "bsl")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_shift_left")
-pub fn bitwise_shift_left(x: Int, y: Int) -> Int
+fn do_bitwise_shift_left(x: Int, y: Int) -> Int
 
 /// Calculates the result of an arithmetic right bitshift.
 ///
@@ -872,6 +892,10 @@ pub fn bitwise_shift_left(x: Int, y: Int) -> Int
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
 /// is equivalent to bitwise operations on big-ints.
 ///
+pub fn bitwise_shift_right(x: Int, y: Int) -> Int {
+  do_bitwise_shift_right(x, y)
+}
+
 @external(erlang, "erlang", "bsr")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_shift_right")
-pub fn bitwise_shift_right(x: Int, y: Int) -> Int
+fn do_bitwise_shift_right(x: Int, y: Int) -> Int

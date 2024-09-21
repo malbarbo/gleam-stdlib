@@ -197,9 +197,17 @@ fn erl_split(a: StringBuilder, b: String, c: Direction) -> List(StringBuilder)
 
 /// Replaces all instances of a pattern with a given string substitute.
 ///
+pub fn replace(
+  in builder: StringBuilder,
+  each pattern: String,
+  with substitute: String,
+) -> StringBuilder {
+  do_replace(builder, pattern, substitute)
+}
+
 @external(erlang, "gleam_stdlib", "string_replace")
 @external(javascript, "../gleam_stdlib.mjs", "string_replace")
-pub fn replace(
+fn do_replace(
   in builder: StringBuilder,
   each pattern: String,
   with substitute: String,

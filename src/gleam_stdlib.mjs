@@ -142,7 +142,12 @@ export function string_length(string) {
     }
     return i;
   } else {
-    return string.match(/./gsu).length;
+    let r = string.match(/./gsu);
+    if (r) {
+      return r.length;
+    } else {
+      return 0;
+    }
   }
 }
 
@@ -151,7 +156,12 @@ export function graphemes(string) {
   if (iterator) {
     return List.fromArray(Array.from(iterator).map((item) => item.segment));
   } else {
-    return List.fromArray(string.match(/./gsu));
+    let r = string.match(/./gsu);
+    if (r) {
+      return List.fromArray(r);
+    } else {
+      return List.fromArray([]);
+    }
   }
 }
 
@@ -425,7 +435,7 @@ export function compile_regex(pattern, options) {
 export function regex_split(regex, string) {
   return List.fromArray(
     string.split(regex).map((item) => (item === undefined ? "" : item)),
-  ); 
+  );
 }
 
 export function regex_scan(regex, string) {

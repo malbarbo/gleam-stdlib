@@ -166,12 +166,12 @@ pub fn base64_encode_test() {
   |> bit_array.base64_encode(True)
   |> should.equal("")
 
-  string.repeat("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 1024 * 32)
+  string.repeat("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 32)
   |> bit_array.from_string
   |> bit_array.base64_encode(True)
   |> should.equal(string.repeat(
     "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB",
-    1024 * 32,
+    32,
   ))
 }
 

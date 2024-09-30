@@ -1,3 +1,6 @@
+import "./abba-polyfill.mjs";
+import "./intl-polyfill.mjs";
+import "./text-encoding-polyfill.mjs";
 import {
   BitArray,
   Error,
@@ -434,6 +437,8 @@ export function compile_regex(pattern, options) {
 
 export function regex_split(regex, string) {
   return List.fromArray(
+    // FIXME: quickjs is returnin item === "undefined"
+    //        see https://github.com/quickjs-ng/quickjs/issues/565
     string.split(regex).map((item) => (item === undefined ? "" : item)),
   );
 }

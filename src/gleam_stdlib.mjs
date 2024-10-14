@@ -834,8 +834,19 @@ export function inspect(v) {
   if (v === null) return "//js(null)";
   if (v === undefined) return "Nil";
   if (t === "string") return inspectString(v);
-  // FIXME: always use decimal in floats (see https://github.com/gleam-lang/stdlib/issues/694)
-  if (t === "bigint" || t === "number") return v.toString();
+  if (t === "bigint") return v.toString();
+  if (t === "number") {
+    let s = v.toString().replace('+', '');
+    if (s.indexOf('.') !== -1) {
+      return s;
+    }
+    let i = s.indexOf('e');
+    if (i === -1) {
+      return s + '.0';
+    } else {
+      return s.slice(0, i) + '.0' + s.slice(i);
+    }
+  }
   if (Array.isArray(v)) return `#(${v.map(inspect).join(", ")})`;
   if (v instanceof List) return inspectList(v);
   if (v instanceof UtfCodepoint) return inspectUtfCodepoint(v);

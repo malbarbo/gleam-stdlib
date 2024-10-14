@@ -1128,19 +1128,37 @@ pub fn target_inspect_test() {
   // Due to JavaScript's `Number` type `Float`s without digits return as
   // `Int`s.
   string.inspect(-1.0)
-  |> should.equal("-1")
+  |> should.equal("-1.0")
 
   string.inspect(0.0)
-  |> should.equal("0")
+  |> should.equal("0.0")
 
   string.inspect(1.0)
-  |> should.equal("1")
+  |> should.equal("1.0")
 
   string.inspect([1.0])
-  |> should.equal("[1]")
+  |> should.equal("[1.0]")
 
   string.inspect(#(1.0))
-  |> should.equal("#(1)")
+  |> should.equal("#(1.0)")
+
+  string.inspect(1.0e123)
+  |> should.equal("1.0e123")
+
+  string.inspect(8.1e45)
+  |> should.equal("8.1e45")
+
+  string.inspect(213412)
+  |> should.equal("213412")
+
+  string.inspect(2.0e-123)
+  |> should.equal("2.0e-123")
+
+  string.inspect(-7.0e-67)
+  |> should.equal("-7.0e-67")
+
+  string.inspect(-0.00012)
+  |> should.equal("-0.00012")
 
   // Unlike on Erlang, on JavaScript `BitArray` and `String` do have a
   // different runtime representation.

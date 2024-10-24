@@ -53,11 +53,16 @@ export function bigint_to_float(n) {
 }
 
 export function float_to_string(float) {
-  const string = float.toString();
+  const string = float.toString().replace('+', '');
   if (string.indexOf(".") >= 0) {
     return string;
   } else {
-    return string + ".0";
+    const index = string.indexOf("e");
+    if (index >= 0) {
+      return string.slice(0, index) + '.0' + string.slice(index);
+    } else {
+      return string + ".0";
+    }
   }
 }
 
@@ -835,18 +840,7 @@ export function inspect(v) {
   if (v === undefined) return "Nil";
   if (t === "string") return inspectString(v);
   if (t === "bigint") return v.toString();
-  if (t === "number") {
-    let s = v.toString().replace('+', '');
-    if (s.indexOf('.') !== -1) {
-      return s;
-    }
-    let i = s.indexOf('e');
-    if (i === -1) {
-      return s + '.0';
-    } else {
-      return s.slice(0, i) + '.0' + s.slice(i);
-    }
-  }
+  if (t === "number") return float_to_string(v);
   if (Array.isArray(v)) return `#(${v.map(inspect).join(", ")})`;
   if (v instanceof List) return inspectList(v);
   if (v instanceof UtfCodepoint) return inspectUtfCodepoint(v);

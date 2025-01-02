@@ -47,8 +47,12 @@ import gleam/order.{type Order}
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "parse_float")
+pub fn parse(string: String) -> Result(Float, Nil) {
+  parse_float(string)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "parse_float")
-pub fn parse(string: String) -> Result(Float, Nil)
+fn parse_float(string: String) -> Result(Float, Nil)
 
 /// Returns the string representation of the provided `Float`.
 ///
@@ -60,8 +64,12 @@ pub fn parse(string: String) -> Result(Float, Nil)
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "float_to_string")
+pub fn to_string(x: Float) -> String {
+  float_to_string(x)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "float_to_string")
-pub fn to_string(x: Float) -> String
+fn float_to_string(x: Float) -> String
 
 /// Restricts a float between two bounds.
 ///
@@ -217,8 +225,12 @@ pub fn max(a: Float, b: Float) -> Float {
 /// ```
 ///
 @external(erlang, "math", "ceil")
-@external(javascript, "../gleam_stdlib.mjs", "ceiling")
-pub fn ceiling(x: Float) -> Float
+pub fn ceiling(x: Float) -> Float {
+  float_ceiling(x)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "float_ceiling")
+fn float_ceiling(x: Float) -> Float
 
 /// Rounds the value to the next lowest whole number as a `Float`.
 ///
@@ -230,8 +242,12 @@ pub fn ceiling(x: Float) -> Float
 /// ```
 ///
 @external(erlang, "math", "floor")
-@external(javascript, "../gleam_stdlib.mjs", "floor")
-pub fn floor(x: Float) -> Float
+pub fn floor(x: Float) -> Float {
+  float_floor(x)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "float_floor")
+fn float_floor(x: Float) -> Float
 
 /// Rounds the value to the nearest whole number as an `Int`.
 ///
@@ -268,8 +284,12 @@ fn js_round(a: Float) -> Int
 /// ```
 ///
 @external(erlang, "erlang", "trunc")
-@external(javascript, "../gleam_stdlib.mjs", "truncate")
-pub fn truncate(x: Float) -> Int
+pub fn truncate(x: Float) -> Int {
+  float_truncate(x)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "float_truncate")
+fn float_truncate(x: Float) -> Int
 
 /// Converts the value to a given precision as a `Float`.
 /// The precision is the number of allowed decimal places.
@@ -459,8 +479,12 @@ fn product_loop(numbers: List(Float), initial: Float) -> Float {
 /// ```
 ///
 @external(erlang, "rand", "uniform")
+pub fn random() -> Float {
+  random_uniform()
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "random_uniform")
-pub fn random() -> Float
+fn random_uniform() -> Float
 
 /// Computes the modulo of a float division of inputs as a `Result`.
 ///
@@ -670,5 +694,9 @@ fn do_log(x: Float) -> Float
 /// ```
 ///
 @external(erlang, "math", "exp")
+pub fn exponential(x: Float) -> Float {
+  exp(x)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "exp")
-pub fn exponential(x: Float) -> Float
+fn exp(x: Float) -> Float

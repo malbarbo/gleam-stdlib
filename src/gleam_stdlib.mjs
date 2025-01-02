@@ -148,7 +148,7 @@ function graphemes_iterator(string) {
   }
 }
 
-export function pop_grapheme(string) {
+export function string_pop_grapheme(string) {
   let first;
   const iterator = graphemes_iterator(string);
   if (iterator) {
@@ -167,11 +167,11 @@ export function pop_codeunit(str) {
   return [str.charCodeAt(0) | 0, str.slice(1)];
 }
 
-export function lowercase(string) {
+export function string_lowercase(string) {
   return string.toLowerCase();
 }
 
-export function uppercase(string) {
+export function string_uppercase(string) {
   return string.toUpperCase();
 }
 
@@ -187,7 +187,7 @@ export function split(xs, pattern) {
   return arrayToList(xs.split(pattern));
 }
 
-export function concat(xs) {
+export function string_tree_concat(xs) {
   let result = "";
   for (const x of xs) {
     result = result + x;
@@ -245,15 +245,15 @@ export function contains_string(haystack, needle) {
   return haystack.indexOf(needle) >= 0;
 }
 
-export function starts_with(haystack, needle) {
+export function string_starts_with(haystack, needle) {
   return haystack.startsWith(needle);
 }
 
-export function ends_with(haystack, needle) {
+export function string_ends_with(haystack, needle) {
   return haystack.endsWith(needle);
 }
 
-export function split_once(haystack, needle) {
+export function string_split_once(haystack, needle) {
   const index = haystack.indexOf(needle);
   if (index >= 0) {
     const before = haystack.slice(0, index);
@@ -281,11 +281,11 @@ const trim_start_regex = /* @__PURE__ */ new RegExp(
 );
 const trim_end_regex = /* @__PURE__ */ new RegExp(`[${unicode_whitespaces}]*$`);
 
-export function trim_start(string) {
+export function string_trim_start(string) {
   return string.replace(trim_start_regex, "");
 }
 
-export function trim_end(string) {
+export function string_trim_end(string) {
   return string.replace(trim_end_regex, "");
 }
 
@@ -406,11 +406,11 @@ export function print_debug(string) {
   }
 }
 
-export function ceiling(float) {
+export function float_ceiling(float) {
   return Math.ceil(float);
 }
 
-export function floor(float) {
+export function float_floor(float) {
   return Math.floor(float);
 }
 
@@ -418,7 +418,7 @@ export function round(float) {
   return Math.round(float);
 }
 
-export function truncate(float) {
+export function float_truncate(float) {
   return Math.trunc(float);
 }
 
@@ -473,7 +473,7 @@ export function utf_codepoint_list_to_string(utf_codepoint_integer_list) {
     .join("");
 }
 
-export function utf_codepoint_to_int(utf_codepoint) {
+export function string_utf_codepoint_to_int(utf_codepoint) {
   return utf_codepoint.value;
 }
 
@@ -523,8 +523,7 @@ const b64EncodeLookup = [
 
 let b64TextDecoder;
 
-// Implementation based on https://github.com/mitschabaude/fast-base64/blob/main/js.js
-export function base64_encode(bit_array, padding) {
+export function bit_array_base64_encode(bit_array, padding) {
   b64TextDecoder ??= new TextDecoder();
 
   bit_array = bit_array_pad_to_bytes(bit_array);
@@ -561,7 +560,7 @@ export function base64_encode(bit_array, padding) {
 }
 
 // From https://developer.mozilla.org/en-US/docs/Glossary/Base64
-export function base64_decode(sBase64) {
+export function bit_array_base64_decode(sBase64) {
   try {
     const binString = atob(sBase64);
     const length = binString.length;
@@ -604,7 +603,7 @@ export function classify_dynamic(data) {
   }
 }
 
-export function byte_size(string) {
+export function string_byte_size(string) {
   return new TextEncoder().encode(string).length;
 }
 
@@ -613,27 +612,27 @@ export function byte_size(string) {
 // To get around this problem and get consistent results use BigInt and then
 // downcast the value back to a Number value.
 
-export function bitwise_and(x, y) {
+export function int_bitwise_and(x, y) {
   return Number(BigInt(x) & BigInt(y));
 }
 
-export function bitwise_not(x) {
+export function int_bitwise_not(x) {
   return Number(~BigInt(x));
 }
 
-export function bitwise_or(x, y) {
+export function int_bitwise_or(x, y) {
   return Number(BigInt(x) | BigInt(y));
 }
 
-export function bitwise_exclusive_or(x, y) {
+export function int_bitwise_exclusive_or(x, y) {
   return Number(BigInt(x) ^ BigInt(y));
 }
 
-export function bitwise_shift_left(x, y) {
+export function int_bitwise_shift_left(x, y) {
   return Number(BigInt(x) << BigInt(y));
 }
 
-export function bitwise_shift_right(x, y) {
+export function int_bitwise_shift_right(x, y) {
   return Number(BigInt(x) >> BigInt(y));
 }
 
@@ -838,7 +837,7 @@ class Inspector {
   }
 }
 
-export function base16_encode(bit_array) {
+export function bit_array_base16_encode(bit_array) {
   const trailingBitsCount = bit_array.bitSize % 8;
 
   let result = "";
@@ -857,7 +856,7 @@ export function base16_encode(bit_array) {
   return result;
 }
 
-export function base16_decode(string) {
+export function bit_array_base16_decode(string) {
   const bytes = new Uint8Array(string.length / 2);
   for (let i = 0; i < string.length; i += 2) {
     const a = parseInt(string[i], 16);

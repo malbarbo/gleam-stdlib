@@ -1,3 +1,6 @@
+import "./abba-polyfill.mjs";
+import "./intl-polyfill.mjs";
+import "./text-encoding-polyfill.mjs";
 import {
   BitArray,
   Error,

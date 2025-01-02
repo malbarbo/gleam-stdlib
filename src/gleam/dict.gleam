@@ -32,8 +32,12 @@ pub type Dict(key, value)
 /// ```
 ///
 @external(erlang, "maps", "size")
+pub fn size(dict: Dict(k, v)) -> Int {
+  map_size(dict)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "map_size")
-pub fn size(dict: Dict(k, v)) -> Int
+fn map_size(dict: Dict(k, v)) -> Int
 
 /// Determines whether or not the dict is empty.
 ///
@@ -76,8 +80,12 @@ pub fn is_empty(dict: Dict(k, v)) -> Bool {
 /// ```
 ///
 @external(erlang, "maps", "to_list")
+pub fn to_list(dict: Dict(k, v)) -> List(#(k, v)) {
+  map_to_list(dict)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "map_to_list")
-pub fn to_list(dict: Dict(k, v)) -> List(#(k, v))
+fn map_to_list(dict: Dict(k, v)) -> List(#(k, v))
 
 /// Converts a list of 2-element tuples `#(key, value)` to a dict.
 ///
@@ -125,8 +133,12 @@ fn do_has_key(key: k, dict: Dict(k, v)) -> Bool {
 /// Creates a fresh dict that contains no values.
 ///
 @external(erlang, "maps", "new")
+pub fn new() -> Dict(k, v) {
+  new_map()
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "new_map")
-pub fn new() -> Dict(k, v)
+fn new_map() -> Dict(k, v)
 
 /// Fetches a value from a dict for a given key.
 ///
@@ -146,8 +158,12 @@ pub fn new() -> Dict(k, v)
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "map_get")
+pub fn get(from: Dict(k, v), get: k) -> Result(v, Nil) {
+  map_get(from, get)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "map_get")
-pub fn get(from: Dict(k, v), get: k) -> Result(v, Nil)
+fn map_get(from: Dict(k, v), get: k) -> Result(v, Nil)
 
 /// Inserts a value into the dict with the given key.
 ///

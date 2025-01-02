@@ -1071,6 +1071,7 @@ pub fn target_inspect_test() {
 
   // Due to JavaScript's `Number` type `Float`s without digits return as
   // `Int`s.
+
   assert string.inspect(-1.0) == "-1"
 
   assert string.inspect(0.0) == "0"

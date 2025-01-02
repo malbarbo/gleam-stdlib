@@ -307,7 +307,7 @@ export function from(iterable) {
 }
 
 export function size(dict) {
-  return dict.size;
+  return BigInt(dict.size);
 }
 
 export function get(dict, key) {
@@ -453,7 +453,14 @@ export function insert(dict, key, value) {
  */
 export function destructiveTransientInsert(key, value, transient) {
   const hash = getHash(key);
-  transient.root = insertIntoNode(transient, transient.root, key, value, hash, 0);
+  transient.root = insertIntoNode(
+    transient,
+    transient.root,
+    key,
+    value,
+    hash,
+    0,
+  );
   return transient;
 }
 
@@ -470,7 +477,14 @@ export function destructiveTransientUpdateWith(key, fun, value, transient) {
   if (existing !== noElementMarker) {
     value = fun(existing);
   }
-  transient.root = insertIntoNode(transient, transient.root, key, value, hash, 0);
+  transient.root = insertIntoNode(
+    transient,
+    transient.root,
+    key,
+    value,
+    hash,
+    0,
+  );
   return transient;
 }
 
@@ -614,7 +628,12 @@ function deleteFromNode(transient, node, key, hash, shift) {
     readIndex++;
     while (readIndex < length) newData[writeIndex++] = data[readIndex++];
 
-    return makeNode(generation, node.datamap | bit, node.nodemap ^ bit, newData);
+    return makeNode(
+      generation,
+      node.datamap | bit,
+      node.nodemap ^ bit,
+      newData,
+    );
   }
 
   // 3. Data Node

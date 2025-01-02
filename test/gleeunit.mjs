@@ -61,6 +61,9 @@ export function crash(message) {
 function write(message) {
   if (globalThis.Deno) {
     Deno.stdout.writeSync(new TextEncoder().encode(message));
+  } else if (globalThis.std) { // quickjs
+    std.out.puts(message);
+    std.out.flush();
   } else {
     process.stdout.write(message);
   }
@@ -69,6 +72,8 @@ function write(message) {
 function exit(code) {
   if (globalThis.Deno) {
     Deno.exit(code);
+  } else if (globalThis.std) { // quickjs
+    std.exit(code);
   } else {
     process.exit(code);
   }
@@ -81,6 +86,9 @@ async function read_dir(path) {
       items.push(item.name);
     }
     return items;
+  } else if (globalThis.std) { // quickjs
+    let [paths, _err] = os.readdir(path)
+    return paths.filter((p) => p != "." && p != "..");
   } else {
     let { readdir } = await import("fs/promises");
     return readdir(path);
@@ -95,6 +103,8 @@ function join_path(a, b) {
 async function read_file(path) {
   if (globalThis.Deno) {
     return Deno.readTextFile(path);
+  } else if (globalThis.std) { // quickjs
+    return std.loadFile(path);
   } else {
     let { readFile } = await import("fs/promises");
     let contents = await readFile(path);

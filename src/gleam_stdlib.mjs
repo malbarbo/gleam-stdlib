@@ -42,6 +42,10 @@ export function to_string(term) {
   return term.toString();
 }
 
+export function int_to_string(term) {
+  return term.toString();
+}
+
 export function float_to_string(float) {
   const string = float.toString().replace("+", "");
   if (string.indexOf(".") >= 0) {
@@ -166,7 +170,7 @@ function graphemes_iterator(string) {
   }
 }
 
-export function pop_grapheme(string) {
+export function string_pop_grapheme(string) {
   let first;
   const iterator = graphemes_iterator(string);
   if (iterator) {
@@ -185,11 +189,11 @@ export function pop_codeunit(str) {
   return [str.charCodeAt(0) | 0, str.slice(1)];
 }
 
-export function lowercase(string) {
+export function string_lowercase(string) {
   return string.toLowerCase();
 }
 
-export function uppercase(string) {
+export function string_uppercase(string) {
   return string.toUpperCase();
 }
 
@@ -205,7 +209,7 @@ export function split(xs, pattern) {
   return List.fromArray(xs.split(pattern));
 }
 
-export function join(xs, separator) {
+export function string_join(xs, separator) {
   const iterator = xs[Symbol.iterator]();
   let result = iterator.next().value || "";
   let current = iterator.next();
@@ -216,7 +220,7 @@ export function join(xs, separator) {
   return result;
 }
 
-export function concat(xs) {
+export function string_tree_concat(xs) {
   let result = "";
   for (const x of xs) {
     result = result + x;
@@ -270,15 +274,15 @@ export function contains_string(haystack, needle) {
   return haystack.indexOf(needle) >= 0;
 }
 
-export function starts_with(haystack, needle) {
+export function string_starts_with(haystack, needle) {
   return haystack.startsWith(needle);
 }
 
-export function ends_with(haystack, needle) {
+export function string_ends_with(haystack, needle) {
   return haystack.endsWith(needle);
 }
 
-export function split_once(haystack, needle) {
+export function string_split_once(haystack, needle) {
   const index = haystack.indexOf(needle);
   if (index >= 0) {
     const before = haystack.slice(0, index);
@@ -304,11 +308,11 @@ const unicode_whitespaces = [
 const trim_start_regex = new RegExp(`^[${unicode_whitespaces}]*`);
 const trim_end_regex = new RegExp(`[${unicode_whitespaces}]*$`);
 
-export function trim_start(string) {
+export function string_trim_start(string) {
   return string.replace(trim_start_regex, "");
 }
 
-export function trim_end(string) {
+export function string_trim_end(string) {
   return string.replace(trim_end_regex, "");
 }
 
@@ -371,11 +375,11 @@ export function print_debug(string) {
   }
 }
 
-export function ceiling(float) {
+export function float_ceiling(float) {
   return Math.ceil(float);
 }
 
-export function floor(float) {
+export function float_floor(float) {
   return Math.floor(float);
 }
 
@@ -383,7 +387,7 @@ export function round(float) {
   return Math.round(float);
 }
 
-export function truncate(float) {
+export function float_truncate(float) {
   return Math.trunc(float);
 }
 
@@ -440,7 +444,7 @@ export function utf_codepoint_list_to_string(utf_codepoint_integer_list) {
     .join("");
 }
 
-export function utf_codepoint_to_int(utf_codepoint) {
+export function string_utf_codepoint_to_int(utf_codepoint) {
   return utf_codepoint.value;
 }
 
@@ -519,7 +523,7 @@ const b64EncodeLookup = [
 let b64TextDecoder;
 
 // Implementation based on https://github.com/mitschabaude/fast-base64/blob/main/js.js
-export function encode64(bit_array, padding) {
+export function bit_array_encode64(bit_array, padding) {
   b64TextDecoder ??= new TextDecoder();
 
   const bytes = bit_array.buffer;
@@ -552,7 +556,7 @@ export function encode64(bit_array, padding) {
 }
 
 // From https://developer.mozilla.org/en-US/docs/Glossary/Base64
-export function decode64(sBase64) {
+export function bit_array_decode64(sBase64) {
   try {
     const binString = atob(sBase64);
     const length = binString.length;
@@ -759,7 +763,7 @@ function try_get_field(value, field, or_else) {
   }
 }
 
-export function byte_size(string) {
+export function string_byte_size(string) {
   return new TextEncoder().encode(string).length;
 }
 
@@ -768,27 +772,27 @@ export function byte_size(string) {
 // To get around this problem and get consistent results use BigInt and then
 // downcast the value back to a Number value.
 
-export function bitwise_and(x, y) {
+export function int_bitwise_and(x, y) {
   return Number(BigInt(x) & BigInt(y));
 }
 
-export function bitwise_not(x) {
+export function int_bitwise_not(x) {
   return Number(~BigInt(x));
 }
 
-export function bitwise_or(x, y) {
+export function int_bitwise_or(x, y) {
   return Number(BigInt(x) | BigInt(y));
 }
 
-export function bitwise_exclusive_or(x, y) {
+export function int_bitwise_exclusive_or(x, y) {
   return Number(BigInt(x) ^ BigInt(y));
 }
 
-export function bitwise_shift_left(x, y) {
+export function int_bitwise_shift_left(x, y) {
   return Number(BigInt(x) << BigInt(y));
 }
 
-export function bitwise_shift_right(x, y) {
+export function int_bitwise_shift_right(x, y) {
   return Number(BigInt(x) >> BigInt(y));
 }
 
@@ -903,7 +907,7 @@ export function inspectUtfCodepoint(codepoint) {
   return `//utfcodepoint(${String.fromCodePoint(codepoint.value)})`;
 }
 
-export function base16_encode(bit_array) {
+export function bit_array_base16_encode(bit_array) {
   let result = "";
   for (const byte of bit_array.buffer) {
     result += byte.toString(16).padStart(2, "0").toUpperCase();
@@ -911,7 +915,7 @@ export function base16_encode(bit_array) {
   return result;
 }
 
-export function base16_decode(string) {
+export function bit_array_base16_decode(string) {
   const bytes = new Uint8Array(string.length / 2);
   for (let i = 0; i < string.length; i += 2) {
     const a = parseInt(string[i], 16);

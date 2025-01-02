@@ -5,7 +5,7 @@ import { classify } from "./gleam/dynamic.mjs";
 import { DecodeError } from "./gleam/dynamic/decode.mjs";
 
 export function strict_index(data, key) {
-  const int = Number.isInteger(key);
+  const int = typeof key === "bigint";
 
   // Dictionaries and dictionary-like objects can be indexed
   if (data instanceof Dict || data instanceof WeakMap || data instanceof Map) {
@@ -16,8 +16,8 @@ export function strict_index(data, key) {
   }
 
   // The first 3 elements of lists can be indexed
-  if ((key === 0 || key === 1 || key === 2) && data instanceof List) {
-    let i = 0;
+  if ((key === 0n || key === 1n || key === 2n) && data instanceof List) {
+    let i = 0n;
     for (const value of data) {
       if (i === key) return new Ok(new Some(value));
       i++;

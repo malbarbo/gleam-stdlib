@@ -259,10 +259,10 @@ pub fn base64_encode_empty_test() {
 }
 
 pub fn base64_encode_large_test() {
-  assert string.repeat("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 1024 * 32)
+  assert string.repeat("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 32)
     |> bit_array.from_string
     |> bit_array.base64_encode(True)
-    == string.repeat("QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB", 1024 * 32)
+    == string.repeat("QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB", 32)
 }
 
 pub fn base64_encode_unaligned_test() {

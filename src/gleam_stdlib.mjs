@@ -27,7 +27,7 @@ export function identity(x) {
 
 export function parse_int(value) {
   if (/^[-+]?(\d+)$/.test(value)) {
-    return new Ok(parseInt(value));
+    return new Ok(BigInt(value));
   } else {
     return new Error(Nil);
   }
@@ -43,6 +43,10 @@ export function parse_float(value) {
 
 export function to_string(term) {
   return term.toString();
+}
+
+export function bigint_to_float(n) {
+  return Number(n)
 }
 
 export function int_to_string(term) {
@@ -64,7 +68,7 @@ export function float_to_string(float) {
 }
 
 export function int_to_base_string(int, base) {
-  return int.toString(base).toUpperCase();
+  return int.toString(Number(base)).toUpperCase();
 }
 
 const int_base_patterns = {
@@ -110,13 +114,14 @@ export function int_from_base_string(string, base) {
     return new Error(Nil);
   }
 
-  const result = parseInt(string, base);
+  // FIXME: int_to_base_string, write a bigint implementation
+  const result = parseInt(string, Number(base));
 
   if (isNaN(result)) {
     return new Error(Nil);
   }
 
-  return new Ok(result);
+  return new Ok(BigInt(result));
 }
 
 export function string_replace(string, target, substitute) {
@@ -141,7 +146,7 @@ export function string_reverse(string) {
 
 export function string_length(string) {
   if (string === "") {
-    return 0;
+    return 0n;
   }
   const iterator = graphemes_iterator(string);
   if (iterator) {
@@ -149,7 +154,7 @@ export function string_length(string) {
     for (const _ of iterator) {
       i++;
     }
-    return i;
+    return BigInt(i);
   } else {
     return string.match(/./gsu).length;
   }
@@ -232,7 +237,7 @@ export function string_tree_concat(xs) {
 }
 
 export function length(data) {
-  return data.length;
+  return BigInt(data.length);
 }
 
 export function string_slice(string, idx, len) {
@@ -267,7 +272,7 @@ export function string_slice(string, idx, len) {
 }
 
 export function string_codeunit_slice(str, from, length) {
-  return str.slice(from, from + length);
+  return str.slice(Number(from), Number(from + length));
 }
 export function crop_string(string, substring) {
   return string.substring(string.indexOf(substring));
@@ -387,11 +392,13 @@ export function float_floor(float) {
 }
 
 export function round(float) {
-  return Math.round(float);
+  // FIXME: round direct to BigInt
+  return BigInt(Math.round(float));
 }
 
 export function float_truncate(float) {
-  return Math.trunc(float);
+  // FIXME: truncate direct to BigInt
+  return BigInt(Math.trunc(float));
 }
 
 export function power(base, exponent) {
@@ -420,14 +427,17 @@ export function random_uniform() {
 }
 
 export function bit_array_slice(bits, position, length) {
-  const start = Math.min(position, position + length);
-  const end = Math.max(position, position + length);
+  function min(a, b) { return a < b? a : b }
+  function max(a, b) { return a > b? a : b }
+  function abs(a) { return a >= 0? a : -a }
+  const start = min(position, position + length);
+  const end = max(position, position + length);
   if (start < 0 || end > bits.length) return new Error(Nil);
-  const byteOffset = bits.buffer.byteOffset + start;
+  const byteOffset = bits.buffer.byteOffset + Number(start);
   const buffer = new Uint8Array(
     bits.buffer.buffer,
     byteOffset,
-    Math.abs(length),
+    Number(abs(length)),
   );
   return new Ok(new BitArray(buffer));
 }
@@ -437,7 +447,7 @@ export function codepoint(int) {
 }
 
 export function string_to_codepoint_integer_list(string) {
-  return List.fromArray(Array.from(string).map((item) => item.codePointAt(0)));
+  return List.fromArray(Array.from(string).map((item) => BigInt(item.codePointAt(0))));
 }
 
 export function utf_codepoint_list_to_string(utf_codepoint_integer_list) {
@@ -448,7 +458,7 @@ export function utf_codepoint_list_to_string(utf_codepoint_integer_list) {
 }
 
 export function string_utf_codepoint_to_int(utf_codepoint) {
-  return utf_codepoint.value;
+  return BigInt(utf_codepoint.value);
 }
 
 export function new_map() {
@@ -456,7 +466,7 @@ export function new_map() {
 }
 
 export function map_size(map) {
-  return map.size;
+  return BigInt(map.size);
 }
 
 export function map_to_list(map) {
@@ -586,7 +596,7 @@ export function classify_dynamic(data) {
     return "BitArray";
   } else if (data instanceof Dict) {
     return "Dict";
-  } else if (Number.isInteger(data)) {
+  } else if (typeof data === "bigint") {
     return "Int";
   } else if (Array.isArray(data)) {
     return `Tuple of ${data.length} elements`;
@@ -619,11 +629,13 @@ export function decode_string(data) {
 }
 
 export function decode_int(data) {
-  return Number.isInteger(data) ? new Ok(data) : decoder_error("Int", data);
+  // FIXME: decode_int, is this the behaviour we want?
+  return typeof data === "bigint" || Number.isInteger(data) ? new Ok(BigInt(data)) : decoder_error("Int", data);
 }
 
 export function decode_float(data) {
-  return typeof data === "number" ? new Ok(data) : decoder_error("Float", data);
+  // FIXME: decode_int, is this the behaviour we want?
+  return typeof data === "number" || typeof data === "bigint" ? new Ok(Number(data)) : decoder_error("Float", data);
 }
 
 export function decode_bool(data) {
@@ -767,7 +779,7 @@ function try_get_field(value, field, or_else) {
 }
 
 export function string_byte_size(string) {
-  return new TextEncoder().encode(string).length;
+  return BigInt(new TextEncoder().encode(string).length);
 }
 
 // In Javascript bitwise operations convert numbers to a sequence of 32 bits
@@ -776,27 +788,27 @@ export function string_byte_size(string) {
 // downcast the value back to a Number value.
 
 export function int_bitwise_and(x, y) {
-  return Number(BigInt(x) & BigInt(y));
+  return x & y;
 }
 
 export function int_bitwise_not(x) {
-  return Number(~BigInt(x));
+  return ~x;
 }
 
 export function int_bitwise_or(x, y) {
-  return Number(BigInt(x) | BigInt(y));
+  return x | y;
 }
 
 export function int_bitwise_exclusive_or(x, y) {
-  return Number(BigInt(x) ^ BigInt(y));
+  return x ^ y;
 }
 
 export function int_bitwise_shift_left(x, y) {
-  return Number(BigInt(x) << BigInt(y));
+  return x << y;
 }
 
 export function int_bitwise_shift_right(x, y) {
-  return Number(BigInt(x) >> BigInt(y));
+  return x >> y;
 }
 
 export function inspect(v) {
@@ -806,7 +818,7 @@ export function inspect(v) {
   if (v === null) return "//js(null)";
   if (v === undefined) return "Nil";
   if (t === "string") return inspectString(v);
-  if (t === "bigint" || Number.isInteger(v)) return v.toString();
+  if (t === "bigint") return v.toString();
   if (t === "number") return float_to_string(v);
   if (Array.isArray(v)) return `#(${v.map(inspect).join(", ")})`;
   if (v instanceof List) return inspectList(v);

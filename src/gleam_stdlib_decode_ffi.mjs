@@ -5,8 +5,6 @@ import { classify } from "./gleam/dynamic.mjs";
 import { DecodeError } from "./gleam/dynamic/decode.mjs";
 
 export function index(data, key) {
-  const int = Number.isInteger(key);
-
   // Dictionaries and dictionary-like objects can be indexed
   if (data instanceof Dict || data instanceof WeakMap || data instanceof Map) {
     const token = {};
@@ -15,9 +13,11 @@ export function index(data, key) {
     return new Ok(new Some(entry));
   }
 
-  // The first 3 elements of lists can be indexed
-  if (Number.isInteger(key) && key < 8 && data instanceof List) {
-    let i = 0;
+  const key_is_int = typeof key === "bigint";
+
+  // Only elements 0-7 of lists can be indexed, negative indices are not allowed
+  if (key_is_int && key >= 0n && key < 8n && data instanceof List) {
+    let i = 0n;
     for (const value of data) {
       if (i === key) return new Ok(new Some(value));
       i++;
@@ -27,7 +27,7 @@ export function index(data, key) {
 
   // Arrays and objects can be indexed
   if (
-    (int && Array.isArray(data)) ||
+    (key_is_int && Array.isArray(data)) ||
     (data && typeof data === "object") ||
     (data && Object.getPrototypeOf(data) === Object.prototype)
   ) {
@@ -35,7 +35,7 @@ export function index(data, key) {
     return new Ok(new None());
   }
 
-  return new Error(int ? "Indexable" : "Dict");
+  return new Error(key_is_int ? "Indexable" : "Dict");
 }
 
 export function list(data, decode, pushPath, index, emptyList) {
@@ -93,7 +93,7 @@ export function float(data) {
 }
 
 export function int(data) {
-  if (Number.isInteger(data)) return new Ok(data);
+  if (typeof data == "bigint") return new Ok(data);
   return new Error(0);
 }
 

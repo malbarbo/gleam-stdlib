@@ -283,11 +283,11 @@ pub fn to_base36(x: Int) -> String {
 ///
 @external(erlang, "erlang", "float")
 pub fn to_float(x: Int) -> Float {
-  identity(x)
+  bigint_to_float(x)
 }
 
-@external(javascript, "../gleam_stdlib.mjs", "identity")
-fn identity(x: Int) -> Float
+@external(javascript, "../gleam_stdlib.mjs", "bigint_to_float")
+fn bigint_to_float(x: Int) -> Float
 
 /// Restricts an int between a lower and upper bound.
 ///
@@ -541,6 +541,7 @@ fn undigits_loop(numbers: List(Int), base: Int, acc: Int) -> Result(Int, Nil) {
 /// ```
 ///
 pub fn random(max: Int) -> Int {
+  // FIXME: random, direct generate bigint
   { float.random() *. to_float(max) }
   |> float.floor
   |> float.round

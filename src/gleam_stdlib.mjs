@@ -42,6 +42,10 @@ export function to_string(term) {
   return term.toString();
 }
 
+export function int_to_string(term) {
+  return term.toString();
+}
+
 export function float_to_string(float) {
   const string = float.toString().replace("+", "");
   if (string.indexOf(".") >= 0) {
@@ -371,11 +375,11 @@ export function print_debug(string) {
   }
 }
 
-export function ceiling(float) {
+export function float_ceiling(float) {
   return Math.ceil(float);
 }
 
-export function floor(float) {
+export function float_floor(float) {
   return Math.floor(float);
 }
 
@@ -383,7 +387,7 @@ export function round(float) {
   return Math.round(float);
 }
 
-export function truncate(float) {
+export function float_truncate(float) {
   return Math.trunc(float);
 }
 
@@ -768,27 +772,27 @@ export function byte_size(string) {
 // To get around this problem and get consistent results use BigInt and then
 // downcast the value back to a Number value.
 
-export function bitwise_and(x, y) {
+export function int_bitwise_and(x, y) {
   return Number(BigInt(x) & BigInt(y));
 }
 
-export function bitwise_not(x) {
+export function int_bitwise_not(x) {
   return Number(~BigInt(x));
 }
 
-export function bitwise_or(x, y) {
+export function int_bitwise_or(x, y) {
   return Number(BigInt(x) | BigInt(y));
 }
 
-export function bitwise_exclusive_or(x, y) {
+export function int_bitwise_exclusive_or(x, y) {
   return Number(BigInt(x) ^ BigInt(y));
 }
 
-export function bitwise_shift_left(x, y) {
+export function int_bitwise_shift_left(x, y) {
   return Number(BigInt(x) << BigInt(y));
 }
 
-export function bitwise_shift_right(x, y) {
+export function int_bitwise_shift_right(x, y) {
   return Number(BigInt(x) >> BigInt(y));
 }
 

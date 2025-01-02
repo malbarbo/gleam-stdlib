@@ -53,9 +53,13 @@ fn from_transient(transient: TransientDict(key, value)) -> Dict(key, value)
 /// ```
 ///
 @external(erlang, "maps", "size")
-@external(javascript, "../dict.mjs", "size")
 @external(webassembly, "builtins", "dict_size")
-pub fn size(dict: Dict(k, v)) -> Int
+pub fn size(dict: Dict(k, v)) -> Int {
+  map_size(dict)
+}
+
+@external(javascript, "../dict.mjs", "size")
+fn map_size(dict: Dict(k, v)) -> Int
 
 /// Determines whether or not the dict is empty.
 ///
@@ -150,9 +154,13 @@ fn do_has_key(key: k, dict: Dict(k, v)) -> Bool
 /// Creates a fresh dict that contains no values.
 ///
 @external(erlang, "maps", "new")
-@external(javascript, "../dict.mjs", "make")
 @external(webassembly, "builtins", "dict_new")
-pub fn new() -> Dict(k, v)
+pub fn new() -> Dict(k, v) {
+  make()
+}
+
+@external(javascript, "../dict.mjs", "make")
+fn make() -> Dict(k, v)
 
 /// Fetches a value from a dict for a given key.
 ///
@@ -170,9 +178,13 @@ pub fn new() -> Dict(k, v)
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "map_get")
-@external(javascript, "../dict.mjs", "get")
 @external(webassembly, "builtins", "dict_get")
-pub fn get(from: Dict(k, v), get: k) -> Result(v, Nil)
+pub fn get(from: Dict(k, v), get: k) -> Result(v, Nil) {
+  map_get(from, get)
+}
+
+@external(javascript, "../dict.mjs", "get")
+fn map_get(from: Dict(k, v), get: k) -> Result(v, Nil)
 
 /// Inserts a value into the dict with the given key.
 ///

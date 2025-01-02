@@ -94,9 +94,13 @@ pub fn square_root(x: Int) -> Result(Float, Nil) {
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "parse_int")
-@external(javascript, "../gleam_stdlib.mjs", "parse_int")
 @external(webassembly, "builtins", "int_parse")
-pub fn parse(string: String) -> Result(Int, Nil)
+pub fn parse(string: String) -> Result(Int, Nil) {
+  parse_int(string)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "parse_int")
+fn parse_int(string: String) -> Result(Int, Nil)
 
 /// Parses a given string as an int in a given base, returning an error if the
 /// input was not a valid number for the given base.
@@ -147,9 +151,13 @@ fn do_base_parse(a: String, b: Int) -> Result(Int, Nil)
 /// ```
 ///
 @external(erlang, "erlang", "integer_to_binary")
-@external(javascript, "../gleam_stdlib.mjs", "to_string")
 @external(webassembly, "builtins", "int_to_string")
-pub fn to_string(x: Int) -> String
+pub fn to_string(x: Int) -> String {
+  int_to_string(x)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "to_string")
+fn int_to_string(x: Int) -> String
 
 /// Prints a given int to a string using the base number provided.
 /// Supports only bases 2 to 36, for values outside of which this function returns an `Error(Nil)`.
@@ -254,9 +262,13 @@ pub fn to_base36(x: Int) -> String {
 /// ```
 ///
 @external(erlang, "erlang", "float")
-@external(javascript, "../gleam_stdlib.mjs", "identity")
 @external(webassembly, "builtins", "_int_to_float")
-pub fn to_float(x: Int) -> Float
+pub fn to_float(x: Int) -> Float {
+  identity(x)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "identity")
+fn identity(x: Int) -> Float
 
 /// Restricts an int between two bounds.
 ///
@@ -702,9 +714,13 @@ pub fn subtract(a: Int, b: Int) -> Int {
 /// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "band")
-@external(javascript, "../gleam_stdlib.mjs", "bitwise_and")
 @external(webassembly, "builtins", "_int_bitwise_and")
-pub fn bitwise_and(x: Int, y: Int) -> Int
+pub fn bitwise_and(x: Int, y: Int) -> Int {
+  int_bitwise_and(x, y)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "int_bitwise_and")
+fn int_bitwise_and(x: Int, y: Int) -> Int
 
 /// Calculates the bitwise NOT of its argument.
 ///
@@ -720,9 +736,13 @@ pub fn bitwise_and(x: Int, y: Int) -> Int
 /// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bnot")
-@external(javascript, "../gleam_stdlib.mjs", "bitwise_not")
 @external(webassembly, "builtins", "_int_bitwise_not")
-pub fn bitwise_not(x: Int) -> Int
+pub fn bitwise_not(x: Int) -> Int {
+  int_bitwise_not(x)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "int_bitwise_not")
+fn int_bitwise_not(x: Int) -> Int
 
 /// Calculates the bitwise OR of its arguments.
 ///
@@ -738,9 +758,13 @@ pub fn bitwise_not(x: Int) -> Int
 /// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bor")
-@external(javascript, "../gleam_stdlib.mjs", "bitwise_or")
 @external(webassembly, "builtins", "_int_bitwise_or")
-pub fn bitwise_or(x: Int, y: Int) -> Int
+pub fn bitwise_or(x: Int, y: Int) -> Int {
+  int_bitwise_or(x, y)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "int_bitwise_or")
+fn int_bitwise_or(x: Int, y: Int) -> Int
 
 /// Calculates the bitwise XOR of its arguments.
 ///
@@ -756,9 +780,13 @@ pub fn bitwise_or(x: Int, y: Int) -> Int
 /// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bxor")
-@external(javascript, "../gleam_stdlib.mjs", "bitwise_exclusive_or")
 @external(webassembly, "builtins", "_int_bitwise_exclusive_or")
-pub fn bitwise_exclusive_or(x: Int, y: Int) -> Int
+pub fn bitwise_exclusive_or(x: Int, y: Int) -> Int {
+  int_bitwise_exclusive_or(x, y)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "int_bitwise_exclusive_or")
+fn int_bitwise_exclusive_or(x: Int, y: Int) -> Int
 
 /// Calculates the result of an arithmetic left bitshift.
 ///
@@ -774,9 +802,13 @@ pub fn bitwise_exclusive_or(x: Int, y: Int) -> Int
 /// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bsl")
-@external(javascript, "../gleam_stdlib.mjs", "bitwise_shift_left")
 @external(webassembly, "builtins", "_int_bitwise_shift_left")
-pub fn bitwise_shift_left(x: Int, y: Int) -> Int
+pub fn bitwise_shift_left(x: Int, y: Int) -> Int {
+  int_bitwise_shift_left(x, y)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "int_bitwise_shift_left")
+fn int_bitwise_shift_left(x: Int, y: Int) -> Int
 
 /// Calculates the result of an arithmetic right bitshift.
 ///
@@ -792,9 +824,13 @@ pub fn bitwise_shift_left(x: Int, y: Int) -> Int
 /// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bsr")
-@external(javascript, "../gleam_stdlib.mjs", "bitwise_shift_right")
 @external(webassembly, "builtins", "_int_bitwise_shift_right")
-pub fn bitwise_shift_right(x: Int, y: Int) -> Int
+pub fn bitwise_shift_right(x: Int, y: Int) -> Int {
+  int_bitwise_shift_right(x, y)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "int_bitwise_shift_right")
+fn int_bitwise_shift_right(x: Int, y: Int) -> Int
 
 /// Run a function for each int between ints `from` and `to`.
 ///

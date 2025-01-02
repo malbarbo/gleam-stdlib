@@ -58,36 +58,52 @@ pub fn prepend_tree(
 /// Runs in constant time.
 ///
 @external(erlang, "gleam_stdlib", "iodata_append")
-@external(javascript, "../gleam_stdlib.mjs", "add")
 @external(webassembly, "builtins", "string_tree_append")
-pub fn append_tree(to tree: StringTree, suffix suffix: StringTree) -> StringTree
+pub fn append_tree(to tree: StringTree, suffix suffix: StringTree) -> StringTree {
+  add(tree, suffix)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "add")
+fn add(to tree: StringTree, suffix suffix: StringTree) -> StringTree
 
 /// Converts a list of strings into a `StringTree`.
 ///
 /// Runs in constant time.
 ///
 @external(erlang, "gleam_stdlib", "identity")
-@external(javascript, "../gleam_stdlib.mjs", "concat")
 @external(webassembly, "builtins", "string_tree_from_strings")
-pub fn from_strings(strings: List(String)) -> StringTree
+pub fn from_strings(strings: List(String)) -> StringTree {
+  string_tree_from_strings(strings)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_tree_concat")
+fn string_tree_from_strings(trees: List(String)) -> StringTree
 
 /// Joins a list of trees into a single tree.
 ///
 /// Runs in constant time.
 ///
 @external(erlang, "gleam_stdlib", "identity")
-@external(javascript, "../gleam_stdlib.mjs", "concat")
 @external(webassembly, "builtins", "string_tree_concat")
-pub fn concat(trees: List(StringTree)) -> StringTree
+pub fn concat(trees: List(StringTree)) -> StringTree {
+  string_tree_concat(trees)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_tree_concat")
+fn string_tree_concat(trees: List(StringTree)) -> StringTree
 
 /// Converts a string into a `StringTree`.
 ///
 /// Runs in constant time.
 ///
 @external(erlang, "gleam_stdlib", "identity")
-@external(javascript, "../gleam_stdlib.mjs", "identity")
 @external(webassembly, "builtins", "string_tree_from_string")
-pub fn from_string(string: String) -> StringTree
+pub fn from_string(string: String) -> StringTree {
+  javascript_from_string(string)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "identity")
+fn javascript_from_string(string: String) -> StringTree
 
 /// Turns a `StringTree` into a `String`.
 ///
@@ -95,16 +111,24 @@ pub fn from_string(string: String) -> StringTree
 /// optimised.
 ///
 @external(erlang, "unicode", "characters_to_binary")
-@external(javascript, "../gleam_stdlib.mjs", "identity")
 @external(webassembly, "builtins", "string_tree_to_string")
-pub fn to_string(tree: StringTree) -> String
+pub fn to_string(tree: StringTree) -> String {
+  javascript_to_string(tree)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "identity")
+fn javascript_to_string(tree: StringTree) -> String
 
 /// Returns the size of the `StringTree` in bytes.
 ///
 @external(erlang, "erlang", "iolist_size")
-@external(javascript, "../gleam_stdlib.mjs", "length")
 @external(webassembly, "builtins", "string_tree_byte_size")
-pub fn byte_size(tree: StringTree) -> Int
+pub fn byte_size(tree: StringTree) -> Int {
+  length(tree)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "length")
+fn length(tree: StringTree) -> Int
 
 /// Joins the given trees into a new tree separated with the given string.
 ///
@@ -118,17 +142,25 @@ pub fn join(trees: List(StringTree), with sep: String) -> StringTree {
 /// lowercased.
 ///
 @external(erlang, "string", "lowercase")
-@external(javascript, "../gleam_stdlib.mjs", "lowercase")
 @external(webassembly, "builtins", "string_tree_lowercase")
-pub fn lowercase(tree: StringTree) -> StringTree
+pub fn lowercase(tree: StringTree) -> StringTree {
+  string_lowercase(tree)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_lowercase")
+fn string_lowercase(tree: StringTree) -> StringTree
 
 /// Converts a `StringTree` to a new one where the contents have been
 /// uppercased.
 ///
 @external(erlang, "string", "uppercase")
-@external(javascript, "../gleam_stdlib.mjs", "uppercase")
 @external(webassembly, "builtins", "string_tree_uppercase")
-pub fn uppercase(tree: StringTree) -> StringTree
+pub fn uppercase(tree: StringTree) -> StringTree {
+  string_uppercase(tree)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_uppercase")
+fn string_uppercase(tree: StringTree) -> StringTree
 
 /// Converts a `StringTree` to a new one with the contents reversed.
 ///
@@ -152,9 +184,13 @@ type Direction {
 
 /// Splits a `StringTree` on a given pattern into a list of trees.
 ///
+pub fn split(tree: StringTree, on pattern: String) -> List(StringTree) {
+  do_split(tree, pattern)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "split")
 @external(webassembly, "builtins", "string_tree_split")
-pub fn split(tree: StringTree, on pattern: String) -> List(StringTree) {
+fn do_split(tree: StringTree, on pattern: String) -> List(StringTree) {
   erl_split(tree, pattern, All)
 }
 
@@ -164,9 +200,17 @@ fn erl_split(a: StringTree, b: String, c: Direction) -> List(StringTree)
 /// Replaces all instances of a pattern with a given string substitute.
 ///
 @external(erlang, "gleam_stdlib", "string_replace")
-@external(javascript, "../gleam_stdlib.mjs", "string_replace")
 @external(webassembly, "builtins", "string_tree_replace")
 pub fn replace(
+  in tree: StringTree,
+  each pattern: String,
+  with substitute: String,
+) -> StringTree {
+  string_replace(tree, pattern, substitute)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_replace")
+fn string_replace(
   in tree: StringTree,
   each pattern: String,
   with substitute: String,

@@ -42,8 +42,12 @@ pub fn is_empty(str: String) -> Bool {
 /// ```
 ///
 @external(erlang, "string", "length")
+pub fn length(string: String) -> Int {
+  string_length(string)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "string_length")
-pub fn length(string: String) -> Int
+fn string_length(string: String) -> Int
 
 /// Reverses a `String`.
 ///
@@ -98,8 +102,12 @@ pub fn replace(
 /// ```
 ///
 @external(erlang, "string", "lowercase")
-@external(javascript, "../gleam_stdlib.mjs", "lowercase")
-pub fn lowercase(string: String) -> String
+pub fn lowercase(string: String) -> String {
+  string_lowercase(string)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_lowercase")
+fn string_lowercase(string: String) -> String
 
 /// Creates a new `String` with all the graphemes in the input `String` converted to
 /// uppercase.
@@ -113,8 +121,12 @@ pub fn lowercase(string: String) -> String
 /// ```
 ///
 @external(erlang, "string", "uppercase")
-@external(javascript, "../gleam_stdlib.mjs", "uppercase")
-pub fn uppercase(string: String) -> String
+pub fn uppercase(string: String) -> String {
+  string_uppercase(string)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_uppercase")
+fn string_uppercase(string: String) -> String
 
 /// Compares two `String`s to see which is "larger" by comparing their graphemes.
 ///
@@ -214,8 +226,12 @@ fn unsafe_byte_slice(string: String, index: Int, length: Int) -> String
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "crop_string")
+pub fn crop(from string: String, before substring: String) -> String {
+  crop_string(string, substring)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "crop_string")
-pub fn crop(from string: String, before substring: String) -> String
+fn crop_string(from string: String, before substring: String) -> String
 
 /// Drops *n* graphemes from the start of a `String`.
 ///
@@ -274,8 +290,12 @@ pub fn drop_end(from string: String, up_to num_graphemes: Int) -> String {
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "contains_string")
+pub fn contains(does haystack: String, contain needle: String) -> Bool {
+  contains_string(haystack, needle)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "contains_string")
-pub fn contains(does haystack: String, contain needle: String) -> Bool
+fn contains_string(does haystack: String, contain needle: String) -> Bool
 
 /// Checks whether the first `String` starts with the second one.
 ///
@@ -286,8 +306,12 @@ pub fn contains(does haystack: String, contain needle: String) -> Bool
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "string_starts_with")
-@external(javascript, "../gleam_stdlib.mjs", "starts_with")
-pub fn starts_with(string: String, prefix: String) -> Bool
+pub fn starts_with(string: String, prefix: String) -> Bool {
+  string_starts_with(string, prefix)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_starts_with")
+fn string_starts_with(string: String, prefix: String) -> Bool
 
 /// Checks whether the first `String` ends with the second one.
 ///
@@ -298,8 +322,12 @@ pub fn starts_with(string: String, prefix: String) -> Bool
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "string_ends_with")
-@external(javascript, "../gleam_stdlib.mjs", "ends_with")
-pub fn ends_with(string: String, suffix: String) -> Bool
+pub fn ends_with(string: String, suffix: String) -> Bool {
+  string_ends_with(string, suffix)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_ends_with")
+fn string_ends_with(string: String, suffix: String) -> Bool
 
 /// Creates a list of `String`s by splitting a given string on a given substring.
 ///
@@ -336,8 +364,15 @@ pub fn split(x: String, on substring: String) -> List(String) {
 /// assert split_once("home/gleam/desktop/", on: "?") == Error(Nil)
 /// ```
 ///
-@external(javascript, "../gleam_stdlib.mjs", "split_once")
 pub fn split_once(
+  string: String,
+  on substring: String,
+) -> Result(#(String, String), Nil) {
+  string_split_once(string, substring)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_split_once")
+fn string_split_once(
   string: String,
   on substring: String,
 ) -> Result(#(String, String), Nil) {
@@ -552,8 +587,12 @@ type Direction {
 /// assert trim_start("  hats  \n") == "hats  \n"
 /// ```
 ///
-@external(javascript, "../gleam_stdlib.mjs", "trim_start")
 pub fn trim_start(string: String) -> String {
+  do_trim_start(string)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_trim_start")
+fn do_trim_start(string: String) -> String {
   erl_trim(string, Leading)
 }
 
@@ -565,8 +604,12 @@ pub fn trim_start(string: String) -> String {
 /// assert trim_end("  hats  \n") == "  hats"
 /// ```
 ///
-@external(javascript, "../gleam_stdlib.mjs", "trim_end")
 pub fn trim_end(string: String) -> String {
+  do_trim_end(string)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_trim_end")
+fn do_trim_end(string: String) -> String {
   erl_trim(string, Trailing)
 }
 
@@ -590,8 +633,12 @@ pub fn trim_end(string: String) -> String {
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "string_pop_grapheme")
-@external(javascript, "../gleam_stdlib.mjs", "pop_grapheme")
-pub fn pop_grapheme(string: String) -> Result(#(String, String), Nil)
+pub fn pop_grapheme(string: String) -> Result(#(String, String), Nil) {
+  string_pop_grapheme(string)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_pop_grapheme")
+fn string_pop_grapheme(string: String) -> Result(#(String, String), Nil)
 
 /// Converts a `String` to a list of
 /// [graphemes](https://en.wikipedia.org/wiki/Grapheme).
@@ -600,7 +647,6 @@ pub fn pop_grapheme(string: String) -> Result(#(String, String), Nil)
 /// assert to_graphemes("abc") == ["a", "b", "c"]
 /// ```
 ///
-@external(javascript, "../gleam_stdlib.mjs", "graphemes")
 pub fn to_graphemes(string: String) -> List(String) {
   string
   |> to_graphemes_loop([])
@@ -691,8 +737,12 @@ fn string_to_codepoint_integer_list(string: String) -> List(Int)
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "utf_codepoint_list_to_string")
+pub fn from_utf_codepoints(utf_codepoints: List(UtfCodepoint)) -> String {
+  utf_codepoint_list_to_string(utf_codepoints)
+}
+
 @external(javascript, "../gleam_stdlib.mjs", "utf_codepoint_list_to_string")
-pub fn from_utf_codepoints(utf_codepoints: List(UtfCodepoint)) -> String
+fn utf_codepoint_list_to_string(utf_codepoints: List(UtfCodepoint)) -> String
 
 /// Converts an integer to a `UtfCodepoint`.
 ///
@@ -717,8 +767,12 @@ pub fn utf_codepoint(value: Int) -> Result(UtfCodepoint, Nil) {
 /// ```
 ///
 @external(erlang, "gleam_stdlib", "identity")
-@external(javascript, "../gleam_stdlib.mjs", "utf_codepoint_to_int")
-pub fn utf_codepoint_to_int(cp: UtfCodepoint) -> Int
+pub fn utf_codepoint_to_int(cp: UtfCodepoint) -> Int {
+  string_utf_codepoint_to_int(cp)
+}
+
+@external(javascript, "../gleam_stdlib.mjs", "string_utf_codepoint_to_int")
+fn string_utf_codepoint_to_int(cp: UtfCodepoint) -> Int
 
 /// Converts a `String` into `Option(String)` where an empty `String` becomes
 /// `None`.
@@ -847,9 +901,13 @@ fn do_inspect(term: anything) -> StringTree
 /// assert byte_size("🏳️‍⚧️🏳️‍🌈👩🏾‍❤️‍👨🏻") == 58
 /// ```
 ///
+pub fn byte_size(string: String) -> Int {
+  string_byte_size(string)
+}
+
 @external(erlang, "erlang", "byte_size")
-@external(javascript, "../gleam_stdlib.mjs", "byte_size")
-pub fn byte_size(string: String) -> Int
+@external(javascript, "../gleam_stdlib.mjs", "string_byte_size")
+fn string_byte_size(string: String) -> Int
 
 /// Removes the given prefix from the start of a `String`, if present.
 ///
@@ -866,9 +924,13 @@ pub fn byte_size(string: String) -> Int
 /// assert remove_prefix("hello!", "@") == "hello!"
 /// ```
 ///
+pub fn remove_prefix(from string: String, matching prefix: String) -> String {
+  string_remove_prefix(string, prefix)
+}
+
 @external(erlang, "gleam_stdlib", "string_remove_prefix")
 @external(javascript, "../gleam_stdlib.mjs", "string_remove_prefix")
-pub fn remove_prefix(from string: String, matching prefix: String) -> String
+fn string_remove_prefix(from string: String, matching prefix: String) -> String
 
 /// Removes the given suffix from the end of a `String`, if present.
 ///
@@ -885,6 +947,10 @@ pub fn remove_prefix(from string: String, matching prefix: String) -> String
 /// assert remove_suffix("Hello!?", "!") == "Hello!?"
 /// ```
 ///
+pub fn remove_suffix(from string: String, matching suffix: String) -> String {
+  string_remove_suffix(string, suffix)
+}
+
 @external(erlang, "gleam_stdlib", "string_remove_suffix")
 @external(javascript, "../gleam_stdlib.mjs", "string_remove_suffix")
-pub fn remove_suffix(from string: String, matching suffix: String) -> String
+fn string_remove_suffix(from string: String, matching suffix: String) -> String

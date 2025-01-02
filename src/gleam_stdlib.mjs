@@ -818,7 +818,7 @@ export function inspect(v) {
   if (v === null) return "//js(null)";
   if (v === undefined) return "Nil";
   if (t === "string") return inspectString(v);
-  if (t === "bigint" || Number.isInteger(v)) return v.toString();
+  if (t === "bigint") return v.toString();
   if (t === "number") return float_to_string(v);
   if (Array.isArray(v)) return `#(${v.map(inspect).join(", ")})`;
   if (v instanceof List) return inspectList(v);

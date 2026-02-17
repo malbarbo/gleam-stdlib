@@ -679,9 +679,16 @@ pub fn subtract(a: Int, b: Int) -> Int {
 
 /// Calculates the bitwise AND of its arguments.
 ///
+/// Most the time you should use the bit array syntaxes instead of manipulating
+/// bits as ints with bitwise functions.
+///
+/// ## Target specific behaviour
+///
 /// The exact behaviour of this function depends on the target platform.
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
-/// is equivalent to bitwise operations on big-ints.
+/// is equivalent to bitwise operations on big-ints. If you need to avoid the
+/// overhead of big-ints on JavaScript use bit arrays or another package that
+/// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "band")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_and")
@@ -689,9 +696,16 @@ pub fn bitwise_and(x: Int, y: Int) -> Int
 
 /// Calculates the bitwise NOT of its argument.
 ///
+/// Most the time you should use the bit array syntaxes instead of manipulating
+/// bits as ints with bitwise functions.
+///
+/// ## Target specific behaviour
+///
 /// The exact behaviour of this function depends on the target platform.
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
-/// is equivalent to bitwise operations on big-ints.
+/// is equivalent to bitwise operations on big-ints. If you need to avoid the
+/// overhead of big-ints on JavaScript use bit arrays or another package that
+/// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bnot")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_not")
@@ -699,9 +713,16 @@ pub fn bitwise_not(x: Int) -> Int
 
 /// Calculates the bitwise OR of its arguments.
 ///
+/// Most the time you should use the bit array syntaxes instead of manipulating
+/// bits as ints with bitwise functions.
+///
+/// ## Target specific behaviour
+///
 /// The exact behaviour of this function depends on the target platform.
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
-/// is equivalent to bitwise operations on big-ints.
+/// is equivalent to bitwise operations on big-ints. If you need to avoid the
+/// overhead of big-ints on JavaScript use bit arrays or another package that
+/// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bor")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_or")
@@ -709,9 +730,16 @@ pub fn bitwise_or(x: Int, y: Int) -> Int
 
 /// Calculates the bitwise XOR of its arguments.
 ///
+/// Most the time you should use the bit array syntaxes instead of manipulating
+/// bits as ints with bitwise functions.
+///
+/// ## Target specific behaviour
+///
 /// The exact behaviour of this function depends on the target platform.
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
-/// is equivalent to bitwise operations on big-ints.
+/// is equivalent to bitwise operations on big-ints. If you need to avoid the
+/// overhead of big-ints on JavaScript use bit arrays or another package that
+/// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bxor")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_exclusive_or")
@@ -719,9 +747,16 @@ pub fn bitwise_exclusive_or(x: Int, y: Int) -> Int
 
 /// Calculates the result of an arithmetic left bitshift.
 ///
+/// Most the time you should use the bit array syntaxes instead of manipulating
+/// bits as ints with bitwise functions.
+///
+/// ## Target specific behaviour
+///
 /// The exact behaviour of this function depends on the target platform.
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
-/// is equivalent to bitwise operations on big-ints.
+/// is equivalent to bitwise operations on big-ints. If you need to avoid the
+/// overhead of big-ints on JavaScript use bit arrays or another package that
+/// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bsl")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_shift_left")
@@ -729,9 +764,16 @@ pub fn bitwise_shift_left(x: Int, y: Int) -> Int
 
 /// Calculates the result of an arithmetic right bitshift.
 ///
+/// Most the time you should use the bit array syntaxes instead of manipulating
+/// bits as ints with bitwise functions.
+///
+/// ## Target specific behaviour
+///
 /// The exact behaviour of this function depends on the target platform.
 /// On Erlang it is equivalent to bitwise operations on ints, on JavaScript it
-/// is equivalent to bitwise operations on big-ints.
+/// is equivalent to bitwise operations on big-ints. If you need to avoid the
+/// overhead of big-ints on JavaScript use bit arrays or another package that
+/// provides faster bitwise operations.
 ///
 @external(erlang, "erlang", "bsr")
 @external(javascript, "../gleam_stdlib.mjs", "bitwise_shift_right")

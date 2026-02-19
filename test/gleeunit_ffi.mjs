@@ -1,6 +1,16 @@
-import { readFileSync } from "node:fs";
 import { Ok, Error as GleamError } from "./gleam.mjs";
 import * as reporting from "./gleeunit/internal/reporting.mjs";
+
+let readFileSync = null
+
+try {
+  const fs = await import("node:fs")
+  if (typeof fs.readFileSync === "function") {
+    readFileSync = fs.readFileSync
+  }
+} catch {
+  readFileSync = std.loadFile
+}
 
 export function read_file(path) {
   try {
@@ -66,6 +76,8 @@ export function crash(message) {
 function exit(code) {
   if (globalThis.Deno) {
     Deno.exit(code);
+  } else if (globalThis.std) { // quickjs
+    std.exit(code);
   } else {
     process.exit(code);
   }
@@ -78,6 +90,9 @@ async function read_dir(path) {
       items.push(item.name);
     }
     return items;
+  } else if (globalThis.std) { // quickjs
+    let [paths, _err] = os.readdir(path)
+    return paths.filter((p) => p != "." && p != "..");
   } else {
     let { readdir } = await import("node:fs/promises");
     return readdir(path);
@@ -92,6 +107,8 @@ function join_path(a, b) {
 async function async_read_file(path) {
   if (globalThis.Deno) {
     return Deno.readTextFile(path);
+  } else if (globalThis.std) { // quickjs
+    return std.loadFile(path);
   } else {
     let { readFile } = await import("node:fs/promises");
     let contents = await readFile(path);

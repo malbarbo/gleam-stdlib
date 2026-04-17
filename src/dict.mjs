@@ -5,6 +5,8 @@
 
 import { isEqual, Result$Error, Result$Ok } from "./gleam.mjs";
 
+const USE_BIGINT = globalThis.__sgleam_bigint === true;
+
 // -- HASH --------------------------------------------------------------------
 
 const referenceMap = /* @__PURE__ */ new WeakMap();
@@ -363,7 +365,7 @@ export function from(iterable) {
 }
 
 export function size(dict) {
-  return dict.size;
+  return USE_BIGINT ? BigInt(dict.size) : dict.size;
 }
 
 export function get(dict, key) {

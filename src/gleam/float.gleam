@@ -325,7 +325,7 @@ fn round_to_float(x: Float) -> Float {
 }
 
 @external(erlang, "erlang", "float")
-@external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(javascript, "../gleam_stdlib.mjs", "bigint_to_float")
 @external(webassembly, "builtins", "_int_to_float")
 fn do_to_float(a: Int) -> Float
 

@@ -30,13 +30,23 @@ import { DecodeError$DecodeError } from "./gleam/dynamic/decode.mjs";
 
 const Nil = undefined;
 
+// sgleam dual-mode support: when `globalThis.__sgleam_bigint` is true the
+// sgleam compiler emits BigInt literals for Gleam ints, so FFI functions
+// that produce ints must return BigInt; otherwise they return Number.
+const USE_BIGINT = globalThis.__sgleam_bigint === true;
+const toInt = USE_BIGINT ? (x) => BigInt(x) : (x) => x;
+
 export function identity(x) {
   return x;
 }
 
+export function bigint_to_float(n) {
+  return Number(n);
+}
+
 export function parse_int(value) {
   if (/^[-+]?(\d+)$/.test(value)) {
-    return Result$Ok(parseInt(value));
+    return Result$Ok(USE_BIGINT ? BigInt(value) : parseInt(value));
   } else {
     return Result$Error(Nil);
   }
@@ -55,7 +65,7 @@ export function to_string(term) {
 }
 
 export function int_to_base_string(int, base) {
-  return int.toString(base).toUpperCase();
+  return int.toString(Number(base)).toUpperCase();
 }
 
 const int_base_patterns = {
@@ -101,13 +111,13 @@ export function int_from_base_string(string, base) {
     return Result$Error(Nil);
   }
 
-  const result = parseInt(string, base);
+  const result = parseInt(string, Number(base));
 
   if (isNaN(result)) {
     return Result$Error(Nil);
   }
 
-  return Result$Ok(result);
+  return Result$Ok(toInt(result));
 }
 
 export function string_replace(string, target, substitute) {
@@ -120,7 +130,7 @@ export function string_reverse(string) {
 
 export function string_length(string) {
   if (string === "") {
-    return 0;
+    return toInt(0);
   }
   const iterator = graphemes_iterator(string);
   if (iterator) {
@@ -128,9 +138,9 @@ export function string_length(string) {
     for (const _ of iterator) {
       i++;
     }
-    return i;
+    return toInt(i);
   } else {
-    return string.match(/./gsu).length;
+    return toInt(string.match(/./gsu).length);
   }
 }
 
@@ -168,7 +178,7 @@ export function string_pop_grapheme(string) {
 }
 
 export function pop_codeunit(str) {
-  return [str.charCodeAt(0) | 0, str.slice(1)];
+  return [toInt(str.charCodeAt(0) | 0), str.slice(1)];
 }
 
 export function string_lowercase(string) {
@@ -200,18 +210,22 @@ export function string_tree_concat(xs) {
 }
 
 export function length(data) {
-  return data.length;
+  return toInt(data.length);
 }
 
 // The index and the length are in bytes of UTF-8, as given by `byte_size`, not
 // in code units of UTF-16.
 export function string_byte_slice(string, index, length) {
+  index = Number(index);
   const bytes = new TextEncoder().encode(string);
   const decoder = new TextDecoder("utf-8", { ignoreBOM: true });
-  return decoder.decode(bytes.subarray(index, index + length));
+  return decoder.decode(bytes.subarray(index, index + Number(length)));
 }
 
 export function string_grapheme_slice(string, idx, len) {
+  idx = Number(idx);
+  len = Number(len);
+
   if (len <= 0 || idx >= string.length) {
     return "";
   }
@@ -243,7 +257,7 @@ export function string_grapheme_slice(string, idx, len) {
 }
 
 export function string_codeunit_slice(str, from, length) {
-  return str.slice(from, from + length);
+  return str.slice(Number(from), Number(from) + Number(length));
 }
 export function crop_string(string, substring) {
   return string.substring(string.indexOf(substring));
@@ -302,11 +316,11 @@ export function bit_array_from_string(string) {
 }
 
 export function bit_array_bit_size(bit_array) {
-  return bit_array.bitSize;
+  return toInt(bit_array.bitSize);
 }
 
 export function bit_array_byte_size(bit_array) {
-  return bit_array.byteSize;
+  return toInt(bit_array.byteSize);
 }
 
 export function bit_array_concat(bit_arrays) {
@@ -390,11 +404,11 @@ export function float_floor(float) {
 }
 
 export function round(float) {
-  return Math.round(float);
+  return toInt(Math.round(float));
 }
 
 export function float_truncate(float) {
-  return Math.trunc(float);
+  return toInt(Math.trunc(float));
 }
 
 export function power(base, exponent) {
@@ -423,14 +437,18 @@ export function random_uniform() {
 }
 
 export function bit_array_slice(bits, position, length) {
-  const start = Math.min(position, position + length);
-  const end = Math.max(position, position + length);
+  // Polymorphic min/max so this works whether position/length are Number or
+  // BigInt (Math.min/max do not accept BigInt).
+  const a = position;
+  const b = position + length;
+  const start = a < b ? a : b;
+  const end = a < b ? b : a;
 
-  if (start < 0 || end * 8 > bits.bitSize) {
+  if (start < 0 || Number(end) * 8 > bits.bitSize) {
     return Result$Error(Nil);
   }
 
-  return Result$Ok(bitArraySlice(bits, start * 8, end * 8));
+  return Result$Ok(bitArraySlice(bits, Number(start) * 8, Number(end) * 8));
 }
 
 export function codepoint(int) {
@@ -438,7 +456,9 @@ export function codepoint(int) {
 }
 
 export function string_to_codepoint_integer_list(string) {
-  return arrayToList(Array.from(string).map((item) => item.codePointAt(0)));
+  return arrayToList(
+    Array.from(string).map((item) => toInt(item.codePointAt(0))),
+  );
 }
 
 export function utf_codepoint_list_to_string(utf_codepoint_integer_list) {
@@ -449,7 +469,7 @@ export function utf_codepoint_list_to_string(utf_codepoint_integer_list) {
 }
 
 export function string_utf_codepoint_to_int(utf_codepoint) {
-  return utf_codepoint.value;
+  return toInt(utf_codepoint.value);
 }
 
 function unsafe_percent_decode(string) {
@@ -562,7 +582,7 @@ export function classify_dynamic(data) {
     return "BitArray";
   } else if (data instanceof Dict) {
     return "Dict";
-  } else if (Number.isInteger(data)) {
+  } else if (USE_BIGINT ? typeof data === "bigint" : Number.isInteger(data)) {
     return "Int";
   } else if (Array.isArray(data)) {
     return `Array`;
@@ -579,7 +599,7 @@ export function classify_dynamic(data) {
 }
 
 export function string_byte_size(string) {
-  return new TextEncoder().encode(string).length;
+  return toInt(new TextEncoder().encode(string).length);
 }
 
 // In JavaScript, bitwise operations convert numbers to a sequence of 32 bits,
@@ -634,6 +654,7 @@ const MAX_SAFE = Number.MAX_SAFE_INTEGER;
 const MIN_SAFE = Number.MIN_SAFE_INTEGER;
 
 export function int_bitwise_and(x, y) {
+  if (USE_BIGINT) return x & y;
   if (x >= MIN_I32 && x <= MAX_I32 && y >= MIN_I32 && y <= MAX_I32)
     return x & y;
   if (x < MIN_SAFE || x > MAX_SAFE || y < MIN_SAFE || y > MAX_SAFE)
@@ -643,6 +664,7 @@ export function int_bitwise_and(x, y) {
 }
 
 export function int_bitwise_or(x, y) {
+  if (USE_BIGINT) return x | y;
   if (x >= MIN_I32 && x <= MAX_I32 && y >= MIN_I32 && y <= MAX_I32)
     return x | y;
   if (x < MIN_SAFE || x > MAX_SAFE || y < MIN_SAFE || y > MAX_SAFE)
@@ -652,6 +674,7 @@ export function int_bitwise_or(x, y) {
 }
 
 export function int_bitwise_exclusive_or(x, y) {
+  if (USE_BIGINT) return x ^ y;
   if (x >= MIN_I32 && x <= MAX_I32 && y >= MIN_I32 && y <= MAX_I32)
     return x ^ y;
   if (x < MIN_SAFE || x > MAX_SAFE || y < MIN_SAFE || y > MAX_SAFE)
@@ -661,6 +684,7 @@ export function int_bitwise_exclusive_or(x, y) {
 }
 
 export function int_bitwise_not(x) {
+  if (USE_BIGINT) return ~x;
   if (x >= MIN_I32 && x <= MAX_I32) return ~x;
   if (x < MIN_SAFE || x > MAX_SAFE) return Number(~BigInt(x));
 
@@ -668,6 +692,7 @@ export function int_bitwise_not(x) {
 }
 
 export function int_bitwise_shift_right(x, y) {
+  if (USE_BIGINT) return x >> y;
   if (y === 0) return x;
   if (y < 0) return int_bitwise_shift_left(x, -y);
   if (y < 32 && x >= MIN_I32 && x <= MAX_I32) return x >> y;
@@ -691,6 +716,7 @@ export function int_bitwise_shift_right(x, y) {
 }
 
 export function int_bitwise_shift_left(x, y) {
+  if (USE_BIGINT) return x << y;
   if (y === 0) return x;
   if (y < 0) return int_bitwise_shift_right(x, -y);
   if (y < 31) return x * (1 << y);
@@ -728,7 +754,8 @@ class Inspector {
     if (v === null) return "//js(null)";
     if (v === undefined) return "Nil";
     if (t === "string") return this.#string(v);
-    if (t === "bigint" || Number.isSafeInteger(v)) return v.toString();
+    if (t === "bigint") return v.toString();
+    if (!USE_BIGINT && Number.isSafeInteger(v)) return v.toString();
     if (t === "number") return float_to_string(v);
     if (v instanceof UtfCodepoint) return this.#utfCodepoint(v);
     if (v instanceof BitArray) return this.#bit_array(v);
@@ -819,8 +846,10 @@ class Inspector {
       list_out += this.inspect(element);
 
       if (char_out) {
-        if (Number.isInteger(element) && element >= 32 && element <= 126) {
-          char_out += String.fromCharCode(element);
+        const isInt =
+          typeof element === "bigint" || Number.isInteger(element);
+        if (isInt && element >= 32 && element <= 126) {
+          char_out += String.fromCharCode(Number(element));
         } else {
           char_out = null;
         }
@@ -935,7 +964,7 @@ export function bit_array_to_int_and_size(bits) {
   const trailingBitsCount = bits.bitSize % 8;
   const unusedBitsCount = trailingBitsCount === 0 ? 0 : 8 - trailingBitsCount;
 
-  return [bits.byteAt(0) >> unusedBitsCount, bits.bitSize];
+  return [toInt(bits.byteAt(0) >> unusedBitsCount), toInt(bits.bitSize)];
 }
 
 export function bit_array_starts_with(bits, prefix) {
@@ -1002,13 +1031,13 @@ export function index(data, key) {
     return Result$Ok(new Some(entry));
   }
 
-  const key_is_int = Number.isInteger(key);
+  const key_is_int = typeof key === "bigint" || Number.isInteger(key);
 
   // Only elements 0-7 of lists can be indexed, negative indices are not allowed
   if (key_is_int && key >= 0 && key < 8 && isList(data)) {
     let i = 0;
     for (const value of data) {
-      if (i === key) return Result$Ok(new Some(value));
+      if (toInt(i) === key) return Result$Ok(new Some(value));
       i++;
     }
     return Result$Error("Indexable");
@@ -1082,8 +1111,10 @@ export function float(data) {
 }
 
 export function int(data) {
-  if (Number.isInteger(data)) return Result$Ok(data);
-  return Result$Error(0);
+  if (USE_BIGINT ? typeof data === "bigint" : Number.isInteger(data)) {
+    return Result$Ok(data);
+  }
+  return Result$Error(toInt(0));
 }
 
 export function string(data) {

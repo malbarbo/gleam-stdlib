@@ -259,11 +259,11 @@ pub fn to_base36(x: Int) -> String {
 ///
 @external(erlang, "erlang", "float")
 pub fn to_float(x: Int) -> Float {
-  identity(x)
+  bigint_to_float(x)
 }
 
-@external(javascript, "../gleam_stdlib.mjs", "identity")
-fn identity(x: Int) -> Float
+@external(javascript, "../gleam_stdlib.mjs", "bigint_to_float")
+fn bigint_to_float(x: Int) -> Float
 
 /// Restricts an int between two bounds.
 ///

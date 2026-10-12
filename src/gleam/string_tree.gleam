@@ -16,6 +16,7 @@ import gleam/list
 /// performance by not using a string tree. Always benchmark your performance
 /// sensitive code.
 ///
+@external(webassembly, "builtins", "StringTree")
 pub type StringTree
 
 /// Create an empty `StringTree`. Useful as the start of a pipe chaining many
@@ -58,6 +59,7 @@ pub fn prepend_tree(
 ///
 @external(erlang, "gleam_stdlib", "iodata_append")
 @external(javascript, "../gleam_stdlib.mjs", "add")
+@external(webassembly, "builtins", "string_tree_append")
 pub fn append_tree(to tree: StringTree, suffix suffix: StringTree) -> StringTree
 
 /// Converts a list of strings into a `StringTree`.
@@ -66,6 +68,7 @@ pub fn append_tree(to tree: StringTree, suffix suffix: StringTree) -> StringTree
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "concat")
+@external(webassembly, "builtins", "string_tree_from_strings")
 pub fn from_strings(strings: List(String)) -> StringTree
 
 /// Joins a list of trees into a single tree.
@@ -74,6 +77,7 @@ pub fn from_strings(strings: List(String)) -> StringTree
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "concat")
+@external(webassembly, "builtins", "string_tree_concat")
 pub fn concat(trees: List(StringTree)) -> StringTree
 
 /// Converts a string into a `StringTree`.
@@ -82,6 +86,7 @@ pub fn concat(trees: List(StringTree)) -> StringTree
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "string_tree_from_string")
 pub fn from_string(string: String) -> StringTree
 
 /// Turns a `StringTree` into a `String`.
@@ -91,12 +96,14 @@ pub fn from_string(string: String) -> StringTree
 ///
 @external(erlang, "unicode", "characters_to_binary")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "string_tree_to_string")
 pub fn to_string(tree: StringTree) -> String
 
 /// Returns the size of the `StringTree` in bytes.
 ///
 @external(erlang, "erlang", "iolist_size")
 @external(javascript, "../gleam_stdlib.mjs", "length")
+@external(webassembly, "builtins", "string_tree_byte_size")
 pub fn byte_size(tree: StringTree) -> Int
 
 /// Joins the given trees into a new tree separated with the given string.
@@ -112,6 +119,7 @@ pub fn join(trees: List(StringTree), with sep: String) -> StringTree {
 ///
 @external(erlang, "string", "lowercase")
 @external(javascript, "../gleam_stdlib.mjs", "lowercase")
+@external(webassembly, "builtins", "string_tree_lowercase")
 pub fn lowercase(tree: StringTree) -> StringTree
 
 /// Converts a `StringTree` to a new one where the contents have been
@@ -119,11 +127,13 @@ pub fn lowercase(tree: StringTree) -> StringTree
 ///
 @external(erlang, "string", "uppercase")
 @external(javascript, "../gleam_stdlib.mjs", "uppercase")
+@external(webassembly, "builtins", "string_tree_uppercase")
 pub fn uppercase(tree: StringTree) -> StringTree
 
 /// Converts a `StringTree` to a new one with the contents reversed.
 ///
 @external(erlang, "string", "reverse")
+@external(webassembly, "builtins", "string_tree_reverse")
 pub fn reverse(tree: StringTree) -> StringTree {
   tree
   |> to_string
@@ -133,6 +143,7 @@ pub fn reverse(tree: StringTree) -> StringTree {
 }
 
 @external(javascript, "../gleam_stdlib.mjs", "graphemes")
+@external(webassembly, "builtins", "string_to_graphemes")
 fn do_to_graphemes(string: String) -> List(String)
 
 type Direction {
@@ -142,6 +153,7 @@ type Direction {
 /// Splits a `StringTree` on a given pattern into a list of trees.
 ///
 @external(javascript, "../gleam_stdlib.mjs", "split")
+@external(webassembly, "builtins", "string_tree_split")
 pub fn split(tree: StringTree, on pattern: String) -> List(StringTree) {
   erl_split(tree, pattern, All)
 }
@@ -153,6 +165,7 @@ fn erl_split(a: StringTree, b: String, c: Direction) -> List(StringTree)
 ///
 @external(erlang, "gleam_stdlib", "string_replace")
 @external(javascript, "../gleam_stdlib.mjs", "string_replace")
+@external(webassembly, "builtins", "string_tree_replace")
 pub fn replace(
   in tree: StringTree,
   each pattern: String,
@@ -180,6 +193,7 @@ pub fn replace(
 /// ```
 ///
 @external(erlang, "string", "equal")
+@external(webassembly, "builtins", "string_tree_is_equal")
 pub fn is_equal(a: StringTree, b: StringTree) -> Bool {
   a == b
 }
@@ -201,6 +215,7 @@ pub fn is_equal(a: StringTree, b: StringTree) -> Bool {
 /// ```
 ///
 @external(erlang, "string", "is_empty")
+@external(webassembly, "builtins", "string_tree_is_empty")
 pub fn is_empty(tree: StringTree) -> Bool {
   from_string("") == tree
 }

@@ -44,15 +44,16 @@ pub type Uri {
 ///   )
 /// ```
 ///
-pub const empty = Uri(
-  scheme: None,
-  userinfo: None,
-  host: None,
-  port: None,
-  path: "",
-  query: None,
-  fragment: None,
-)
+pub const empty =
+  Uri(
+    scheme: None,
+    userinfo: None,
+    host: None,
+    port: None,
+    path: "",
+    query: None,
+    fragment: None,
+  )
 
 /// Parses a compliant URI string into the `Uri` type.
 /// If the string is not a valid URI string then an error is returned.
@@ -511,10 +512,12 @@ fn parse_fragment(rest: String, pieces: Uri) -> Result(Uri, Nil) {
 // `fold_codeunits`-style loop and a state machine.
 @external(erlang, "gleam_stdlib", "string_pop_codeunit")
 @external(javascript, "../gleam_stdlib.mjs", "pop_codeunit")
+@external(webassembly, "builtins", "_string_pop_codeunit")
 fn pop_codeunit(str: String) -> #(Int, String)
 
 @external(erlang, "binary", "part")
 @external(javascript, "../gleam_stdlib.mjs", "string_codeunit_slice")
+@external(webassembly, "builtins", "_string_byte_slice")
 fn codeunit_slice(str: String, at_index from: Int, length length: Int) -> String
 
 /// Parses an URL-encoded query string into a list of key value pairs.
@@ -530,6 +533,7 @@ fn codeunit_slice(str: String, at_index from: Int, length length: Int) -> String
 ///
 @external(erlang, "gleam_stdlib", "parse_query")
 @external(javascript, "../gleam_stdlib.mjs", "parse_query")
+@external(webassembly, "builtins", "uri_parse_query")
 pub fn parse_query(query: String) -> Result(List(#(String, String)), Nil)
 
 /// Encodes a list of key value pairs as a URI query string.
@@ -567,6 +571,7 @@ fn percent_encode_query(part: String) -> String {
 ///
 @external(erlang, "gleam_stdlib", "percent_encode")
 @external(javascript, "../gleam_stdlib.mjs", "percent_encode")
+@external(webassembly, "builtins", "uri_percent_encode")
 pub fn percent_encode(value: String) -> String
 
 /// Decodes a percent encoded string.
@@ -579,6 +584,7 @@ pub fn percent_encode(value: String) -> String
 ///
 @external(erlang, "gleam_stdlib", "percent_decode")
 @external(javascript, "../gleam_stdlib.mjs", "percent_decode")
+@external(webassembly, "builtins", "uri_percent_decode")
 pub fn percent_decode(value: String) -> Result(String, Nil)
 
 /// Splits the path section of a URI into its constituent segments.

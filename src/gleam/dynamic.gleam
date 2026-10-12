@@ -12,6 +12,7 @@ import gleam/dict
 /// The exact runtime representation of dynamic values will depend on the
 /// compilation target used.
 ///
+@external(webassembly, "builtins", "Dynamic")
 pub type Dynamic
 
 /// Return a string indicating the type of the dynamic value.
@@ -26,12 +27,14 @@ pub type Dynamic
 ///
 @external(erlang, "gleam_stdlib", "classify_dynamic")
 @external(javascript, "../gleam_stdlib.mjs", "classify_dynamic")
+@external(webassembly, "builtins", "dynamic_classify")
 pub fn classify(data: Dynamic) -> String
 
 /// Create a dynamic value from a bool.
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "dynamic_bool")
 pub fn bool(a: Bool) -> Dynamic
 
 /// Create a dynamic value from a string.
@@ -40,18 +43,21 @@ pub fn bool(a: Bool) -> Dynamic
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "dynamic_string")
 pub fn string(a: String) -> Dynamic
 
 /// Create a dynamic value from a float.
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "dynamic_float")
 pub fn float(a: Float) -> Dynamic
 
 /// Create a dynamic value from an int.
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "dynamic_int")
 pub fn int(a: Int) -> Dynamic
 
 /// Create a dynamic value from a bit array.
@@ -64,6 +70,7 @@ pub fn bit_array(a: BitArray) -> Dynamic
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "dynamic_list")
 pub fn list(a: List(Dynamic)) -> Dynamic
 
 /// Create a dynamic value from a list, converting it to a sequential runtime
@@ -73,6 +80,7 @@ pub fn list(a: List(Dynamic)) -> Dynamic
 ///
 @external(erlang, "erlang", "list_to_tuple")
 @external(javascript, "../gleam_stdlib.mjs", "list_to_array")
+@external(webassembly, "builtins", "dynamic_array")
 pub fn array(a: List(Dynamic)) -> Dynamic
 
 /// Create a dynamic value made of an unordered series of keys and values, where
@@ -96,4 +104,5 @@ pub fn nil() -> Dynamic {
 
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "_dynamic_cast")
 fn cast(a: anything) -> Dynamic

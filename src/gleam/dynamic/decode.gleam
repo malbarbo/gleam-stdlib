@@ -451,7 +451,19 @@ fn index(
 
 @external(erlang, "gleam_stdlib", "index")
 @external(javascript, "../../gleam_stdlib.mjs", "index")
-fn bare_index(data: Dynamic, key: anything) -> Result(Option(Dynamic), String)
+fn bare_index(data: Dynamic, key: anything) -> Result(Option(Dynamic), String) {
+  case dynamic_index(data, cast(key)) {
+    Ok(Ok(value)) -> Ok(option.Some(value))
+    Ok(Error(Nil)) -> Ok(option.None)
+    Error(kind) -> Error(kind)
+  }
+}
+
+@external(webassembly, "builtins", "dynamic_index")
+fn dynamic_index(
+  data: Dynamic,
+  key: Dynamic,
+) -> Result(Result(Dynamic, Nil), String)
 
 fn push_path(
   layer: #(t, List(DecodeError)),
@@ -658,6 +670,7 @@ fn decode_string(data: Dynamic) -> #(String, List(DecodeError)) {
 }
 
 @external(javascript, "../../gleam_stdlib.mjs", "string")
+@external(webassembly, "builtins", "dynamic_decode_string")
 fn dynamic_string(from data: Dynamic) -> Result(String, String) {
   case dynamic_bit_array(data) {
     Ok(data) ->
@@ -715,6 +728,7 @@ fn decode_int(data: Dynamic) -> #(Int, List(DecodeError)) {
 
 @external(erlang, "gleam_stdlib", "int")
 @external(javascript, "../../gleam_stdlib.mjs", "int")
+@external(webassembly, "builtins", "dynamic_decode_int")
 fn dynamic_int(data: Dynamic) -> Result(Int, Int)
 
 /// A decoder that decodes `Float` values.
@@ -741,6 +755,7 @@ fn decode_float(data: Dynamic) -> #(Float, List(DecodeError)) {
 
 @external(erlang, "gleam_stdlib", "float")
 @external(javascript, "../../gleam_stdlib.mjs", "float")
+@external(webassembly, "builtins", "dynamic_decode_float")
 fn dynamic_float(data: Dynamic) -> Result(Float, Float)
 
 /// A decoder that decodes `Dynamic` values. This decoder never returns an error.
@@ -802,10 +817,39 @@ pub fn list(of inner: Decoder(a)) -> Decoder(List(a)) {
 fn decode_list(
   data: Dynamic,
   item: fn(Dynamic) -> #(t, List(DecodeError)),
-  push_path: fn(#(t, List(DecodeError)), key) -> #(t, List(DecodeError)),
+  push_path: fn(#(t, List(DecodeError)), String) -> #(t, List(DecodeError)),
   index: Int,
   acc: List(t),
-) -> #(List(t), List(DecodeError))
+) -> #(List(t), List(DecodeError)) {
+  case dynamic_list_items(data) {
+    Ok(items) -> decode_list_items(items, item, push_path, index, acc)
+    Error(Nil) -> #([], [DecodeError("List", dynamic.classify(data), [])])
+  }
+}
+
+fn decode_list_items(
+  items: List(Dynamic),
+  item: fn(Dynamic) -> #(t, List(DecodeError)),
+  push_path: fn(#(t, List(DecodeError)), String) -> #(t, List(DecodeError)),
+  index: Int,
+  acc: List(t),
+) -> #(List(t), List(DecodeError)) {
+  case items {
+    [] -> #(list.reverse(acc), [])
+    [element, ..rest] ->
+      case item(element) {
+        #(out, []) ->
+          decode_list_items(rest, item, push_path, index + 1, [out, ..acc])
+        layer -> {
+          let #(_, errors) = push_path(layer, int.to_string(index))
+          #([], errors)
+        }
+      }
+  }
+}
+
+@external(webassembly, "builtins", "dynamic_decode_list_items")
+fn dynamic_list_items(data: Dynamic) -> Result(List(Dynamic), Nil)
 
 /// A decoder that decodes dicts where all keys and values are decoded with
 /// given decoders.
@@ -871,6 +915,7 @@ fn fold_dict(
 
 @external(erlang, "gleam_stdlib", "dict")
 @external(javascript, "../../gleam_stdlib.mjs", "dict")
+@external(webassembly, "builtins", "dynamic_decode_dict")
 fn decode_dict(data: Dynamic) -> Result(Dict(Dynamic, Dynamic), Nil)
 
 /// A decoder that decodes nullable values of a type decoded by with a given
@@ -1126,8 +1171,10 @@ pub fn recursive(inner: fn() -> Decoder(a)) -> Decoder(a) {
 
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "_dynamic_cast")
 fn cast(a: anything) -> Dynamic
 
 @external(erlang, "gleam_stdlib", "is_null")
 @external(javascript, "../../gleam_stdlib.mjs", "is_null")
+@external(webassembly, "builtins", "dynamic_is_null")
 fn is_null(a: Dynamic) -> Bool

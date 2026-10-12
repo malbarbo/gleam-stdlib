@@ -16,6 +16,11 @@ const recursion_test_cycles = 1_000_000
 @target(javascript)
 const recursion_test_cycles = 40_000
 
+// WebAssembly has tail calls, and the other functions use the stack of the
+// engine, which holds this many frames.
+@target(webassembly)
+const recursion_test_cycles = 40_000
+
 pub fn length_empty_test() {
   let zero = 0
   assert list.length([]) == zero

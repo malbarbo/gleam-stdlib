@@ -14,6 +14,7 @@ import gleam/option.{type Option}
 /// See [the Erlang map module](https://erlang.org/doc/man/maps.html) for more
 /// information.
 ///
+@external(webassembly, "builtins", "Dict")
 pub type Dict(key, value)
 
 /// "TransientDict" is a mutable view on a dictionary used internally by the
@@ -21,18 +22,21 @@ pub type Dict(key, value)
 ///
 /// Transients are to be treated as having a linear (single-use, think rust) type.
 /// A transient value becomes invalid as soon as it's passed to one of the functions.
+@external(webassembly, "builtins", "Dict")
 type TransientDict(key, value)
 
 /// Convert a normal Dict to a transient dict.
 /// A transient dict is a mutable copy of the original.
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../dict.mjs", "toTransient")
+@external(webassembly, "builtins", "dict_identity")
 fn to_transient(dict: Dict(key, value)) -> TransientDict(key, value)
 
 /// Convert a transient dict back into a normal dict, freezing its contents.
 /// Using the transient after this point is highly unsafe and leads to undefined behavior.
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../dict.mjs", "fromTransient")
+@external(webassembly, "builtins", "dict_identity")
 fn from_transient(transient: TransientDict(key, value)) -> Dict(key, value)
 
 /// Determines the number of key-value pairs in the dict.
@@ -50,6 +54,7 @@ fn from_transient(transient: TransientDict(key, value)) -> Dict(key, value)
 ///
 @external(erlang, "maps", "size")
 @external(javascript, "../dict.mjs", "size")
+@external(webassembly, "builtins", "dict_size")
 pub fn size(dict: Dict(k, v)) -> Int
 
 /// Determines whether or not the dict is empty.
@@ -94,6 +99,7 @@ pub fn is_empty(dict: Dict(k, v)) -> Bool {
 /// ```
 ///
 @external(erlang, "maps", "to_list")
+@external(webassembly, "builtins", "dict_to_list")
 pub fn to_list(dict: Dict(k, v)) -> List(#(k, v)) {
   fold(dict, from: [], with: fn(acc, key, value) { [#(key, value), ..acc] })
 }
@@ -104,6 +110,7 @@ pub fn to_list(dict: Dict(k, v)) -> List(#(k, v)) {
 /// that is present in the dict.
 ///
 @external(erlang, "maps", "from_list")
+@external(webassembly, "builtins", "dict_from_list")
 pub fn from_list(list: List(#(k, v))) -> Dict(k, v) {
   from_list_loop(to_transient(new()), list)
 }
@@ -132,6 +139,7 @@ fn from_list_loop(
 /// ```
 ///
 @external(javascript, "../dict.mjs", "has")
+@external(webassembly, "builtins", "dict_has_key")
 pub fn has_key(dict: Dict(k, v), key: k) -> Bool {
   do_has_key(key, dict)
 }
@@ -143,6 +151,7 @@ fn do_has_key(key: k, dict: Dict(k, v)) -> Bool
 ///
 @external(erlang, "maps", "new")
 @external(javascript, "../dict.mjs", "make")
+@external(webassembly, "builtins", "dict_new")
 pub fn new() -> Dict(k, v)
 
 /// Fetches a value from a dict for a given key.
@@ -162,6 +171,7 @@ pub fn new() -> Dict(k, v)
 ///
 @external(erlang, "gleam_stdlib", "map_get")
 @external(javascript, "../dict.mjs", "get")
+@external(webassembly, "builtins", "dict_get")
 pub fn get(from: Dict(k, v), get: k) -> Result(v, Nil)
 
 /// Inserts a value into the dict with the given key.
@@ -181,6 +191,7 @@ pub fn get(from: Dict(k, v), get: k) -> Result(v, Nil)
 /// ```
 ///
 @external(javascript, "../dict.mjs", "insert")
+@external(webassembly, "builtins", "dict_insert")
 pub fn insert(
   into dict: Dict(k, v),
   for key: k,
@@ -194,6 +205,7 @@ fn do_insert(key: k, value: v, dict: Dict(k, v)) -> Dict(k, v)
 
 @external(erlang, "maps", "put")
 @external(javascript, "../dict.mjs", "destructiveTransientInsert")
+@external(webassembly, "builtins", "dict_transient_insert")
 fn transient_insert(
   key: k,
   value: v,
@@ -212,6 +224,7 @@ fn transient_insert(
 /// ```
 ///
 @external(javascript, "../dict.mjs", "map")
+@external(webassembly, "builtins", "dict_map_values")
 pub fn map_values(in dict: Dict(k, v), with fun: fn(k, v) -> a) -> Dict(k, a) {
   do_map_values(fun, dict)
 }
@@ -232,6 +245,7 @@ fn do_map_values(f: fn(k, v) -> a, dict: Dict(k, v)) -> Dict(k, a)
 /// ```
 ///
 @external(erlang, "maps", "keys")
+@external(webassembly, "builtins", "dict_keys")
 pub fn keys(dict: Dict(k, v)) -> List(k) {
   fold(dict, [], fn(acc, key, _value) { [key, ..acc] })
 }
@@ -249,6 +263,7 @@ pub fn keys(dict: Dict(k, v)) -> List(k) {
 /// ```
 ///
 @external(erlang, "maps", "values")
+@external(webassembly, "builtins", "dict_values")
 pub fn values(dict: Dict(k, v)) -> List(v) {
   fold(dict, [], fn(acc, _key, value) { [value, ..acc] })
 }
@@ -270,6 +285,7 @@ pub fn values(dict: Dict(k, v)) -> List(v) {
 ///   == dict.from_list([#("a", 0), #("b", 1)])
 /// ```
 ///
+@external(webassembly, "builtins", "dict_filter")
 pub fn filter(
   in dict: Dict(k, v),
   keeping predicate: fn(k, v) -> Bool,
@@ -306,6 +322,7 @@ fn do_filter(f: fn(k, v) -> Bool, dict: Dict(k, v)) -> Dict(k, v) {
 ///   == dict.from_list([#("a", 0), #("b", 1)])
 /// ```
 ///
+@external(webassembly, "builtins", "dict_take")
 pub fn take(
   from dict: Dict(k, v),
   keeping desired_keys: List(k),
@@ -347,6 +364,7 @@ fn do_take_loop(
 /// ```
 ///
 @external(erlang, "maps", "merge")
+@external(webassembly, "builtins", "dict_merge")
 pub fn merge(
   into dict: Dict(k, v),
   from new_entries: Dict(k, v),
@@ -369,12 +387,14 @@ pub fn merge(
 ///   == dict.from_list([#("a", 0), #("b", 1)])
 /// ```
 ///
+@external(webassembly, "builtins", "dict_delete")
 pub fn delete(from dict: Dict(k, v), delete key: k) -> Dict(k, v) {
   to_transient(dict) |> transient_delete(key, _) |> from_transient
 }
 
 @external(erlang, "maps", "remove")
 @external(javascript, "../dict.mjs", "destructiveTransientDelete")
+@external(webassembly, "builtins", "dict_transient_delete")
 fn transient_delete(a: k, b: TransientDict(k, v)) -> TransientDict(k, v)
 
 /// Creates a new dict from a given dict with all the same entries except any with
@@ -397,6 +417,7 @@ fn transient_delete(a: k, b: TransientDict(k, v)) -> TransientDict(k, v)
 ///   == dict.from_list([])
 /// ```
 ///
+@external(webassembly, "builtins", "dict_drop")
 pub fn drop(
   from dict: Dict(k, v),
   drop disallowed_keys: List(k),
@@ -480,6 +501,7 @@ pub fn upsert(
 /// ```
 ///
 @external(javascript, "../dict.mjs", "fold")
+@external(webassembly, "builtins", "dict_fold")
 pub fn fold(
   over dict: Dict(k, v),
   from initial: acc,
@@ -533,6 +555,7 @@ pub fn each(dict: Dict(k, v), fun: fn(k, v) -> a) -> Nil {
 ///   == dict.from_list([#("a", 2), #("b", 1), #("c", 3)])
 /// ```
 ///
+@external(webassembly, "builtins", "dict_combine")
 pub fn combine(
   dict: Dict(k, v),
   other: Dict(k, v),
@@ -562,6 +585,7 @@ fn do_combine(
 
 @external(erlang, "maps", "update_with")
 @external(javascript, "../dict.mjs", "destructiveTransientUpdateWith")
+@external(webassembly, "builtins", "dict_transient_update_with")
 fn transient_update_with(
   key: k,
   fun: fn(v) -> v,

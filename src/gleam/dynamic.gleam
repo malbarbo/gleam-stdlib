@@ -64,6 +64,7 @@ pub fn int(a: Int) -> Dynamic
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "identity")
+@external(webassembly, "builtins", "dynamic_bit_array")
 pub fn bit_array(a: BitArray) -> Dynamic
 
 /// Create a dynamic value from a list.

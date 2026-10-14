@@ -790,6 +790,7 @@ fn decode_bit_array(data: Dynamic) -> #(BitArray, List(DecodeError)) {
 
 @external(erlang, "gleam_stdlib", "bit_array")
 @external(javascript, "../../gleam_stdlib.mjs", "bit_array")
+@external(webassembly, "builtins", "dynamic_decode_bit_array")
 fn dynamic_bit_array(data: Dynamic) -> Result(BitArray, BitArray)
 
 /// A decoder that decodes lists where all elements are decoded with a given

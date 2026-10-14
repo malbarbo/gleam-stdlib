@@ -11,26 +11,26 @@ import gleam/string
 ///
 @external(erlang, "gleam_stdlib", "identity")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_from_string")
-@external(webassembly, "builtins", "_bit_array_from_string")
+@external(webassembly, "builtins", "bit_array_from_string")
 pub fn from_string(x: String) -> BitArray
 
 /// Returns an integer which is the number of bits in the bit array.
 ///
 @external(erlang, "erlang", "bit_size")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_bit_size")
-@external(webassembly, "builtins", "_bit_array_bit_size")
+@external(webassembly, "builtins", "bit_array_bit_size")
 pub fn bit_size(x: BitArray) -> Int
 
 /// Returns an integer which is the number of bytes in the bit array.
 ///
 @external(erlang, "erlang", "byte_size")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_byte_size")
-@external(webassembly, "builtins", "_bit_array_byte_size")
+@external(webassembly, "builtins", "bit_array_byte_size")
 pub fn byte_size(x: BitArray) -> Int
 
 /// Pads a bit array with zeros so that it is a whole number of bytes.
 ///
-@external(webassembly, "builtins", "_bit_array_pad_to_bytes")
+@external(webassembly, "builtins", "bit_array_pad_to_bytes")
 pub fn pad_to_bytes(data: BitArray) -> BitArray {
   case bit_size(data) % 8 {
     0 -> data
@@ -67,7 +67,7 @@ pub fn append(to first: BitArray, suffix second: BitArray) -> BitArray {
 ///
 @external(erlang, "gleam_stdlib", "bit_array_slice")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_slice")
-@external(webassembly, "builtins", "_bit_array_slice")
+@external(webassembly, "builtins", "bit_array_slice")
 pub fn slice(
   from string: BitArray,
   at position: Int,
@@ -131,7 +131,7 @@ fn unsafe_to_string(a: BitArray) -> String
 ///
 @external(erlang, "gleam_stdlib", "bit_array_concat")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_concat")
-@external(webassembly, "builtins", "_bit_array_concat")
+@external(webassembly, "builtins", "bit_array_concat")
 pub fn concat(bit_arrays: List(BitArray)) -> BitArray
 
 /// Encodes a BitArray into a base 64 encoded string.
@@ -263,14 +263,59 @@ fn inspect_loop(input: BitArray, accumulator: String) -> String {
 /// assert bit_array.compare(<<1, 2:size(2)>>, with: <<1, 2:size(2)>>) == Eq
 /// ```
 ///
-@external(webassembly, "builtins", "_bit_array_compare")
 pub fn compare(a: BitArray, with b: BitArray) -> order.Order {
+  compare_loop(a, b)
+}
+
+@target(webassembly)
+fn compare_loop(a: BitArray, b: BitArray) -> order.Order {
+  case bit_array_compare(a, b) {
+    0 -> order.Eq
+    order if order < 0 -> order.Lt
+    _ -> order.Gt
+  }
+}
+
+@target(webassembly)
+@external(webassembly, "builtins", "bit_array_compare")
+fn bit_array_compare(a: BitArray, b: BitArray) -> Int
+
+@target(erlang)
+fn compare_loop(a: BitArray, b: BitArray) -> order.Order {
   case a, b {
     <<first_byte, first_rest:bits>>, <<second_byte, second_rest:bits>> ->
       case first_byte, second_byte {
         f, s if f > s -> order.Gt
         f, s if f < s -> order.Lt
-        _, _ -> compare(first_rest, second_rest)
+        _, _ -> compare_loop(first_rest, second_rest)
+      }
+
+    <<>>, <<>> -> order.Eq
+    // First has more items, example: "AB" > "A":
+    _, <<>> -> order.Gt
+    // Second has more items, example: "A" < "AB":
+    <<>>, _ -> order.Lt
+    // This happens when there's unusually sized elements.
+    // Handle these special cases via custom erlang function.
+    first, second ->
+      case bit_array_to_int_and_size(first), bit_array_to_int_and_size(second) {
+        #(a, _), #(b, _) if a > b -> order.Gt
+        #(a, _), #(b, _) if a < b -> order.Lt
+        #(_, size_a), #(_, size_b) if size_a > size_b -> order.Gt
+        #(_, size_a), #(_, size_b) if size_a < size_b -> order.Lt
+        _, _ -> order.Eq
+      }
+  }
+}
+
+@target(javascript)
+fn compare_loop(a: BitArray, b: BitArray) -> order.Order {
+  case a, b {
+    <<first_byte, first_rest:bits>>, <<second_byte, second_rest:bits>> ->
+      case first_byte, second_byte {
+        f, s if f > s -> order.Gt
+        f, s if f < s -> order.Lt
+        _, _ -> compare_loop(first_rest, second_rest)
       }
 
     <<>>, <<>> -> order.Eq
@@ -305,7 +350,7 @@ fn bit_array_to_int_and_size(a: BitArray) -> #(Int, Int)
 /// ```
 ///
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_starts_with")
-@external(webassembly, "builtins", "_bit_array_starts_with")
+@external(webassembly, "builtins", "bit_array_starts_with")
 pub fn starts_with(bits: BitArray, prefix: BitArray) -> Bool {
   let prefix_size = bit_size(prefix)
 

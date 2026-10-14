@@ -338,7 +338,6 @@ fn compare_loop(a: BitArray, b: BitArray) -> order.Order {
 
 @external(erlang, "gleam_stdlib", "bit_array_to_int_and_size")
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_to_int_and_size")
-@external(webassembly, "builtins", "bit_array_to_int_and_size")
 fn bit_array_to_int_and_size(a: BitArray) -> #(Int, Int)
 
 /// Checks whether the first `BitArray` starts with the second one.

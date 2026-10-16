@@ -336,7 +336,11 @@ fn compare_loop(a: BitArray, b: BitArray) -> order.Order {
   }
 }
 
+@target(erlang)
 @external(erlang, "gleam_stdlib", "bit_array_to_int_and_size")
+fn bit_array_to_int_and_size(a: BitArray) -> #(Int, Int)
+
+@target(javascript)
 @external(javascript, "../gleam_stdlib.mjs", "bit_array_to_int_and_size")
 fn bit_array_to_int_and_size(a: BitArray) -> #(Int, Int)
 

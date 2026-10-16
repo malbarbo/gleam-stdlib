@@ -517,7 +517,7 @@ fn pop_codeunit(str: String) -> #(Int, String)
 
 @external(erlang, "binary", "part")
 @external(javascript, "../gleam_stdlib.mjs", "string_codeunit_slice")
-@external(webassembly, "builtins", "_string_byte_slice")
+@external(webassembly, "builtins", "_string_codeunit_slice")
 fn codeunit_slice(str: String, at_index from: Int, length length: Int) -> String
 
 /// Parses an URL-encoded query string into a list of key value pairs.

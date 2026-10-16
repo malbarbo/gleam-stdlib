@@ -1078,11 +1078,19 @@ pub fn optionally_at_no_path_error_test() {
 
 @external(erlang, "maps", "from_list")
 @external(javascript, "../../gleam_stdlib_test_ffi.mjs", "object")
-fn make_object(items: List(#(String, t))) -> Dynamic
+fn make_object(items: List(#(String, Int))) -> Dynamic {
+  dynamic.properties(
+    list.map(items, fn(item) { #(dynamic.string(item.0), dynamic.int(item.1)) }),
+  )
+}
 
 @external(erlang, "maps", "from_list")
 @external(javascript, "../../gleam_stdlib_test_ffi.mjs", "map")
-fn make_map(items: List(#(String, t))) -> Dynamic
+fn make_map(items: List(#(String, Int))) -> Dynamic {
+  dynamic.properties(
+    list.map(items, fn(item) { #(dynamic.string(item.0), dynamic.int(item.1)) }),
+  )
+}
 
 pub fn js_object_test() {
   let assert Ok(value) =

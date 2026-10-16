@@ -15,6 +15,7 @@ pub fn main() -> Nil {
 }
 
 @external(javascript, "./gleeunit_ffi.mjs", "main")
+@external(webassembly, "./gleeunit_wasm_ffi.mjs", "main")
 fn do_main() -> Nil {
   let options = [Verbose, NoTty, Report(#(GleeunitProgress, [Colored(True)]))]
 

@@ -223,5 +223,8 @@ fn read_file(path: String) -> Result(BitArray, dynamic.Dynamic) {
   }
 }
 
+// Not used by the WebAssembly runner.
 @external(javascript, "../../gleeunit_ffi.mjs", "read_file")
-fn read_file_text(path: String) -> Result(String, dynamic.Dynamic)
+fn read_file_text(_path: String) -> Result(String, dynamic.Dynamic) {
+  Error(dynamic.nil())
+}

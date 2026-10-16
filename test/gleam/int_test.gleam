@@ -708,6 +708,14 @@ pub fn bitwise_operations_with_boundary_values_test() {
   // 2^31 & 0xFFFFFFFF = 2^31
 }
 
+@target(erlang)
+pub fn bitwise_shift_edge_cases_test() {
+  // Test edge cases for shifts
+  assert int.bitwise_shift_left(1, 63) == 9_223_372_036_854_775_808
+  assert int.bitwise_shift_right(9_223_372_036_854_775_808, 63) == 1
+}
+
+@target(javascript)
 pub fn bitwise_shift_edge_cases_test() {
   // Test edge cases for shifts
   assert int.bitwise_shift_left(1, 63) == 9_223_372_036_854_775_808

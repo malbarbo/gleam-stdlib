@@ -322,7 +322,8 @@ fn do_to_float(a: Int) -> Float
 /// ```
 ///
 pub fn absolute_value(x: Float) -> Float {
-  case x >=. 0.0 {
+  // `0.0 -. x` also turns -0.0 into 0.0.
+  case x >. 0.0 {
     True -> x
     False -> 0.0 -. x
   }

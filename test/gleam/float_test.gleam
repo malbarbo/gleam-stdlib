@@ -380,6 +380,10 @@ pub fn absolute_value_zero_test() {
   assert float.absolute_value(0.0) == 0.0
 }
 
+pub fn absolute_value_negative_zero_test() {
+  assert float.to_string(float.absolute_value(-0.0)) == "0.0"
+}
+
 pub fn absolute_value_positive_test() {
   assert float.absolute_value(1.0) == 1.0
 }

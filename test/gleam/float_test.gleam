@@ -303,6 +303,10 @@ pub fn to_precision_floating_point_fix_test() {
   assert float.to_precision(184.20000000000002, 2) == 184.2
 }
 
+pub fn to_precision_scaled_beyond_64_bits_test() {
+  assert float.to_precision(1.0e15, 5) == 1.0e15
+}
+
 pub fn to_precision_large_test() {
   assert float.to_precision(12_345_678_912_345_678_912_345_678.0, -19)
     == 1_234_568.0e19

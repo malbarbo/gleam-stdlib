@@ -280,11 +280,26 @@ pub fn to_precision(x: Float, precision: Int) -> Float {
   case precision <= 0 {
     True -> {
       let factor = do_power(10.0, do_to_float(-precision))
-      do_to_float(round(x /. factor)) *. factor
+      round_to_float(x /. factor) *. factor
     }
     False -> {
       let factor = do_power(10.0, do_to_float(precision))
-      do_to_float(round(x *. factor)) /. factor
+      round_to_float(x *. factor) /. factor
+    }
+  }
+}
+
+// Rounds half away from zero like `round`, but without an `Int`, as the
+// scaled float may not fit in one of a fixed size.
+fn round_to_float(x: Float) -> Float {
+  case x <. 0.0 {
+    True -> negate(round_to_float(negate(x)))
+    False -> {
+      let whole = floor(x)
+      case x -. whole >=. 0.5 {
+        True -> whole +. 1.0
+        False -> whole
+      }
     }
   }
 }

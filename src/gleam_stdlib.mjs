@@ -325,7 +325,8 @@ export function bit_array_to_string(bit_array) {
   }
 
   try {
-    const decoder = new TextDecoder("utf-8", { fatal: true });
+    // The byte order mark is kept, as on Erlang.
+    const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
 
     if (bit_array.bitOffset === 0) {
       return Result$Ok(decoder.decode(bit_array.rawBuffer));

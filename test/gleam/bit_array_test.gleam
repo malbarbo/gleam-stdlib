@@ -210,6 +210,10 @@ pub fn to_string_unicode_test() {
   assert bit_array.to_string(<<"ø":utf8>>) == Ok("ø")
 }
 
+pub fn to_string_byte_order_mark_test() {
+  assert bit_array.to_string(<<0xEF, 0xBB, 0xBF, "A":utf8>>) == Ok("\u{FEFF}A")
+}
+
 pub fn to_string_invalid_test() {
   assert bit_array.to_string(<<255>>) == Error(Nil)
 }

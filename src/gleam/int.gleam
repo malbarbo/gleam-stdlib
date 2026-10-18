@@ -561,7 +561,8 @@ pub fn modulo(dividend: Int, by divisor: Int) -> Result(Int, Nil) {
     0 -> Error(Nil)
     _ -> {
       let remainder = dividend % divisor
-      case remainder * divisor < 0 {
+      // The signs are compared without multiplying, which could overflow.
+      case remainder != 0 && { remainder < 0 } != { divisor < 0 } {
         True -> Ok(remainder + divisor)
         False -> Ok(remainder)
       }
@@ -600,7 +601,8 @@ pub fn floor_divide(dividend: Int, by divisor: Int) -> Result(Int, Nil) {
   case divisor {
     0 -> Error(Nil)
     divisor ->
-      case dividend * divisor < 0 && dividend % divisor != 0 {
+      // The signs are compared without multiplying, which could overflow.
+      case dividend % divisor != 0 && { dividend < 0 } != { divisor < 0 } {
         True -> Ok(dividend / divisor - 1)
         False -> Ok(dividend / divisor)
       }

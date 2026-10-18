@@ -474,6 +474,11 @@ pub fn modulo_both_negative_test() {
   assert int.modulo(-13, by: -3) == Ok(-1)
 }
 
+pub fn modulo_product_beyond_64_bits_test() {
+  assert int.modulo(-4_000_000_000, by: 3_000_000_000_000)
+    == Ok(2_996_000_000_000)
+}
+
 pub fn floor_divide_by_self_test() {
   assert int.floor_divide(1, 1) == Ok(1)
 }
@@ -504,6 +509,10 @@ pub fn floor_divide_negative_dividend_test() {
 
 pub fn floor_divide_negative_small_test() {
   assert int.floor_divide(-1, by: 2) == Ok(-1)
+}
+
+pub fn floor_divide_product_beyond_64_bits_test() {
+  assert int.floor_divide(-4_000_000_000_000, by: 3_000_000_001) == Ok(-1334)
 }
 
 pub fn add_test() {

@@ -466,6 +466,11 @@ pub fn drop_start_zero_test() {
   assert string.drop_start("gleam", up_to: 0) == "gleam"
 }
 
+pub fn drop_start_non_ascii_test() {
+  assert string.drop_start("😀ab", up_to: 1) == "ab"
+  assert string.drop_start("éb😀c", up_to: 2) == "😀c"
+}
+
 pub fn drop_start_3499_test() {
   // https://github.com/gleam-lang/gleam/issues/3499
   assert string.drop_start("\r]", 1) == "]"

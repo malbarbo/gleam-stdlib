@@ -200,8 +200,12 @@ export function length(data) {
   return data.length;
 }
 
+// The index and the length are in bytes of UTF-8, as given by `byte_size`, not
+// in code units of UTF-16.
 export function string_byte_slice(string, index, length) {
-  return string.slice(index, index + length);
+  const bytes = new TextEncoder().encode(string);
+  const decoder = new TextDecoder("utf-8", { ignoreBOM: true });
+  return decoder.decode(bytes.subarray(index, index + length));
 }
 
 export function string_grapheme_slice(string, idx, len) {

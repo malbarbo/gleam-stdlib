@@ -808,6 +808,10 @@ class Inspector {
   }
 
   #customType(record) {
+    // A host that gives a type a text of its own, such as a value that holds
+    // functions and state the user never wrote, answers here.
+    const text = globalThis.gleam_inspect?.(record);
+    if (text !== undefined) return text;
     const props = Object.keys(record)
       .map((label) => {
         const value = this.inspect(record[label]);

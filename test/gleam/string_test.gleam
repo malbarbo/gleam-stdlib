@@ -454,6 +454,11 @@ pub fn drop_start_basic_test() {
   assert string.drop_start("gleam", up_to: 2) == "eam"
 }
 
+pub fn drop_start_multibyte_test() {
+  assert string.drop_start("ação", up_to: 2) == "ão"
+  assert string.drop_start("😀abc", up_to: 1) == "abc"
+}
+
 pub fn drop_start_beyond_length_test() {
   assert string.drop_start("gleam", up_to: 6) == ""
 }

@@ -215,7 +215,10 @@ export function length(data) {
 
 export function string_byte_slice(string, index, length) {
   index = Number(index);
-  return string.slice(index, index + Number(length));
+  const bytes = new TextEncoder().encode(string);
+  return new TextDecoder().decode(
+    bytes.subarray(index, index + Number(length)),
+  );
 }
 
 export function string_grapheme_slice(string, idx, len) {

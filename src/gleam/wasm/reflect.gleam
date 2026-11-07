@@ -28,6 +28,7 @@ pub type Value {
   Bool(Bool)
   Nil
   BitArray(BitArray)
+  UtfCodepoint(UtfCodepoint)
   Tuple(List(Dynamic))
   /// The empty list.
   Empty
@@ -67,6 +68,7 @@ pub fn view(value: Dynamic) -> Value {
     Bool,
     Nil,
     BitArray,
+    UtfCodepoint,
     Tuple,
     Empty,
     Cons,
@@ -105,6 +107,7 @@ fn dynamic_view(
   _bool: fn(Bool) -> v,
   _nil: v,
   _bit_array: fn(BitArray) -> v,
+  _utf_codepoint: fn(UtfCodepoint) -> v,
   _tuple: fn(List(Dynamic)) -> v,
   _empty: v,
   _cons: fn(Dynamic, Dynamic) -> v,

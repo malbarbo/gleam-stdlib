@@ -44,10 +44,11 @@ pub fn alloc(size: Int) -> Result(Int, Nil) {
 
 /// Runs `f`, and gives back to the arena what was taken while `f` ran.
 ///
-/// A scope inside another works, and a panic inside `f` keeps what was
-/// taken. An `alloc` outside any scope keeps its bytes until the program
-/// ends, unless it runs inside a call of a builtin, like a function given to
-/// `list.map`, which gives back what the call took.
+/// A scope inside another works. A panic inside `f` keeps what was taken,
+/// until a `failure.catch` around the scope catches it, which gives back
+/// what was taken after it started. An `alloc` outside any scope keeps its
+/// bytes until the program ends, unless it runs inside a call of a builtin,
+/// like a function given to `list.map`, which gives back what the call took.
 ///
 pub fn scope(f: fn() -> a) -> a {
   let mark = arena_mark()

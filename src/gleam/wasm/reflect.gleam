@@ -80,6 +80,20 @@ pub fn view(value: Dynamic) -> Value {
   )
 }
 
+/// The text of `value` that `string.inspect` gives without the function of
+/// `inspect = { module, function }` in `[webassembly]`. That function uses it
+/// for the values it does not show in its own way, as `string.inspect` would
+/// call it again.
+///
+pub fn inspect(value: Dynamic) -> String {
+  dynamic_inspect(value)
+}
+
+@external(webassembly, "builtins", "dynamic_inspect")
+fn dynamic_inspect(_data: Dynamic) -> String {
+  panic as "only on the WebAssembly target"
+}
+
 fn record(
   module: String,
   name: String,

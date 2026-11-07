@@ -3,6 +3,10 @@
 //// name, like `@external(webassembly, "wasi_snapshot_preview1", "proc_exit")`,
 //// and which take and return them as they are.
 ////
+//// The operations of `I32` and `I64` wrap at 32 and 64 bits, whatever the
+//// width of `Int` and the `int_overflow` of the project are, as a hash or a
+//// random number generator needs.
+////
 //// Only the WebAssembly target has these functions.
 
 import gleam/int
@@ -101,6 +105,139 @@ pub fn f64_from_float(_x: Float) -> F64 {
 ///
 @external(webassembly, "builtins", "_f64_to_float")
 pub fn f64_to_float(_x: F64) -> Float {
+  panic as "only on the WebAssembly target"
+}
+
+/// Adds `a` and `b`, modulo 2^32.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let max = wasm.i32_wrap(2_147_483_647)
+/// assert wasm.i32_to_int(wasm.i32_add(max, wasm.i32_wrap(1))) == -2_147_483_648
+/// ```
+///
+@external(webassembly, "builtins", "_i32_add")
+pub fn i32_add(_a: I32, _b: I32) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Subtracts `b` from `a`, modulo 2^32.
+///
+@external(webassembly, "builtins", "_i32_sub")
+pub fn i32_sub(_a: I32, _b: I32) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Multiplies `a` and `b`, modulo 2^32.
+///
+@external(webassembly, "builtins", "_i32_mul")
+pub fn i32_mul(_a: I32, _b: I32) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// The bitwise and of `a` and `b`.
+///
+@external(webassembly, "builtins", "_i32_and")
+pub fn i32_and(_a: I32, _b: I32) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// The bitwise or of `a` and `b`.
+///
+@external(webassembly, "builtins", "_i32_or")
+pub fn i32_or(_a: I32, _b: I32) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// The bitwise exclusive or of `a` and `b`.
+///
+@external(webassembly, "builtins", "_i32_xor")
+pub fn i32_xor(_a: I32, _b: I32) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Shifts `a` left by `bits` modulo 32.
+///
+@external(webassembly, "builtins", "_i32_shift_left")
+pub fn i32_shift_left(_a: I32, _bits: Int) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Shifts `a` right by `bits` modulo 32, keeping its sign.
+///
+@external(webassembly, "builtins", "_i32_shift_right")
+pub fn i32_shift_right(_a: I32, _bits: Int) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Shifts `a` right by `bits` modulo 32, filling with zeros.
+///
+@external(webassembly, "builtins", "_i32_shift_right_unsigned")
+pub fn i32_shift_right_unsigned(_a: I32, _bits: Int) -> I32 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Adds `a` and `b`, modulo 2^64.
+///
+@external(webassembly, "builtins", "_i64_add")
+pub fn i64_add(_a: I64, _b: I64) -> I64 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Subtracts `b` from `a`, modulo 2^64.
+///
+@external(webassembly, "builtins", "_i64_sub")
+pub fn i64_sub(_a: I64, _b: I64) -> I64 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Multiplies `a` and `b`, modulo 2^64.
+///
+@external(webassembly, "builtins", "_i64_mul")
+pub fn i64_mul(_a: I64, _b: I64) -> I64 {
+  panic as "only on the WebAssembly target"
+}
+
+/// The bitwise and of `a` and `b`.
+///
+@external(webassembly, "builtins", "_i64_and")
+pub fn i64_and(_a: I64, _b: I64) -> I64 {
+  panic as "only on the WebAssembly target"
+}
+
+/// The bitwise or of `a` and `b`.
+///
+@external(webassembly, "builtins", "_i64_or")
+pub fn i64_or(_a: I64, _b: I64) -> I64 {
+  panic as "only on the WebAssembly target"
+}
+
+/// The bitwise exclusive or of `a` and `b`.
+///
+@external(webassembly, "builtins", "_i64_xor")
+pub fn i64_xor(_a: I64, _b: I64) -> I64 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Shifts `a` left by `bits` modulo 64.
+///
+@external(webassembly, "builtins", "_i64_shift_left")
+pub fn i64_shift_left(_a: I64, _bits: Int) -> I64 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Shifts `a` right by `bits` modulo 64, keeping its sign.
+///
+@external(webassembly, "builtins", "_i64_shift_right")
+pub fn i64_shift_right(_a: I64, _bits: Int) -> I64 {
+  panic as "only on the WebAssembly target"
+}
+
+/// Shifts `a` right by `bits` modulo 64, filling with zeros.
+///
+@external(webassembly, "builtins", "_i64_shift_right_unsigned")
+pub fn i64_shift_right_unsigned(_a: I64, _bits: Int) -> I64 {
   panic as "only on the WebAssembly target"
 }
 

@@ -1,5 +1,7 @@
 //// The failures of a program on the WebAssembly target: a `panic`, a
-//// `todo`, a `let assert` that does not match and a false `assert`.
+//// `todo`, a `let assert` that does not match, a false `assert`, and, with
+//// `int_overflow = "fail"` and `stack_overflow = "fail"`, an `Int`
+//// operation whose result does not fit and a call past `stack_limit`.
 ////
 //// A failure only raises an exception that `catch` catches when the root
 //// package has `failure = "exception"` in the `[webassembly]` section of
@@ -43,9 +45,12 @@ pub type Kind {
   Todo
   LetAssert
   Assert
+  IntOverflow
+  StackOverflow
 }
 
-/// The message of the JavaScript target for a failure without one.
+/// The message of the JavaScript target for a failure without one, and the
+/// message of the WebAssembly target for an overflow.
 ///
 /// ## Examples
 ///
@@ -60,6 +65,8 @@ pub fn default_message(kind: Kind) -> String {
       "`todo` expression evaluated. This code has not yet been implemented."
     LetAssert -> "Pattern match failed, no pattern matched the value."
     Assert -> "Assertion failed."
+    IntOverflow -> "Int overflow."
+    StackOverflow -> "Stack overflow."
   }
 }
 
@@ -97,6 +104,8 @@ fn kind_of(name: String) -> Kind {
     "panic" -> Panic
     "todo" -> Todo
     "let_assert" -> LetAssert
+    "int_overflow" -> IntOverflow
+    "stack_overflow" -> StackOverflow
     _ -> Assert
   }
 }

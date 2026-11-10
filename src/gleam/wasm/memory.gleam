@@ -153,7 +153,9 @@ pub fn read(address: Int, size: Int) -> Result(BitArray, Nil) {
 /// Returns `True` if the `size` bytes at `address` are in the arena,
 /// `False` otherwise.
 fn in_arena(address: Int, size: Int) -> Bool {
-  address >= unsigned(arena_base()) && address + size <= unsigned(arena_mark())
+  let end = unsigned(arena_mark())
+  // `address + size` could go past the largest `Int`.
+  address >= unsigned(arena_base()) && address <= end && size <= end - address
 }
 
 fn unsigned(n: I32) -> Int {

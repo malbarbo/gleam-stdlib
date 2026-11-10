@@ -18,25 +18,35 @@
 /// Returns the square root of `x`, which must not be negative.
 ///
 @external(webassembly, "builtins", "float_sqrt")
-pub fn sqrt(x: Float) -> Float
+pub fn sqrt(x: Float) -> Float {
+  panic as "only on the WebAssembly target"
+}
 
 /// Returns the sine of `x`, in radians.
 ///
 @external(webassembly, "builtins", "float_sin")
-pub fn sin(x: Float) -> Float
+pub fn sin(x: Float) -> Float {
+  panic as "only on the WebAssembly target"
+}
 
 /// Returns the cosine of `x`, in radians.
 ///
 @external(webassembly, "builtins", "float_cos")
-pub fn cos(x: Float) -> Float
+pub fn cos(x: Float) -> Float {
+  panic as "only on the WebAssembly target"
+}
 
 /// Returns the angle of the point `(x, y)`, in radians between -pi and pi.
 ///
 @external(webassembly, "builtins", "float_atan2")
-pub fn atan2(y: Float, x: Float) -> Float
+pub fn atan2(y: Float, x: Float) -> Float {
+  panic as "only on the WebAssembly target"
+}
 
 /// Returns the square root of `a * a + b * b`, without overflow when `a * a`
 /// does not fit in a `Float`.
 ///
 @external(webassembly, "builtins", "float_hypot")
-pub fn hypot(a: Float, b: Float) -> Float
+pub fn hypot(a: Float, b: Float) -> Float {
+  panic as "only on the WebAssembly target"
+}

@@ -37,7 +37,8 @@ pub type Value {
   /// The empty dict.
   EmptyDict
   /// A dict that is not empty, with one of its entries and the dict of the
-  /// others. The entries come in the order of their hashes.
+  /// others. The entries come in the order that the dict keeps them, which
+  /// is not the order of their hashes nor the order of the inserts.
   Entry(key: Dynamic, value: Dynamic, rest: Dynamic)
   /// A value of a custom type. `is_opaque` is `True` when the type is
   /// opaque.
